@@ -103,34 +103,48 @@ router.delete('/:reflectionId', verify, async (req, res) => {
 
 // update reflection
 router.patch('/:reflectionId', verify, async (req, res) => {
-    try{
+    try {
         const currentUser = await User.findOne({ _id: req.user._id });
         const reflections = currentUser.reflectionEntries
         const specificReflection = functions.getObject(req.params.reflectionId, reflections)
+        console.log(specificReflection)
         if (specificReflection === null) {
             res.json("Reflection Entry not found")
         } 
         // update information
         if (req.body.post) {
+            console.log("to update:")
             specificReflection.event = req.body.post.event
             specificReflection.description = req.body.post.description
+            const moodBefore = new Mood({
+                scale: req.body.post.scaleBefore
+            })
+            const moodDuring = new Mood({
+                scale: req.body.post.scaleDuring
+            })
+            const moodAfter = new Mood({
+                scale: req.body.post.scaleAfter
+            })
             specificReflection.feelings = {
                     before: moodBefore,
                     during: moodDuring,
                     after: moodAfter
             }
             specificReflection.learnt = req.body.post.learnt
+            console.log("here")
             // extra points if more detailed reflection is provided 
             if (req.body.post.extended) {
                 specificReflection.evaluation = req.body.post.evaluation
                 specificReflection.analysis = req.body.post.analysis
                 specificReflection.conclusion = req.body.post.conclusion
                 specificReflection.actionPlan = req.body.post.actionPlan
-                if (specificReflection.extened == false) {
+                if (specificReflection.extended == false) {
+                    specificReflection.extended = true
                     specificReflection.points = 2*specificReflection.points
                 }
             }
         }
+        console.log(specificReflection)
         currentUser.save()
         res.json(specificReflection);
     } catch(err) {
