@@ -42,6 +42,13 @@ const userSchema = new mongoose.Schema({
 
     misc: [MISC],
 
+    deletedPoints: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 10000
+    },
+
     // pet 'eats' the points/exp/food and slowly dies without it
 
     petInfo: PetInfo

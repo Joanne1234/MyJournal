@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Mood = require("./Mood").actual_model;
 
 const ReflectionEntrySchema = new mongoose.Schema({
     event:{ 
@@ -15,11 +14,12 @@ const ReflectionEntrySchema = new mongoose.Schema({
         min: 2,
         max: 1024
     },
-
+    
+    // corresponding ids of moods
     feelings: {
-        before: Mood,
-        during: Mood,
-        after: Mood
+        before: {type: String, required: true},
+        during: {type: String, required: true},
+        after: {type: String, required: true}
     },
 
     evaluation: {

@@ -48,7 +48,7 @@ router.post("/", verify, async (req, res) => {
             title: req.body.post.title,
             entry: req.body.post.entry,
             positives: req.body.post.positives,
-            mood: mood
+            mood: mood._id
         });
         console.log("here")
         // save new journal to database
@@ -64,12 +64,17 @@ router.post("/", verify, async (req, res) => {
 
 // delete journal
 router.delete('/:journalId', verify, async (req, res) => {
-    try{
+    try {
         const currentUser = await User.findOne({ _id: req.user._id });
         const journals = currentUser.journalEntries
         // find journal and remove from list of journals
         const specificJournal = functions.getObject(req.params.journalId, journals)
         journals.pull(specificJournal)
+        // find corresponding mood and remove?
+        const moods = currentUser.mood
+        const mood = functions.getObject(specificJournal.mood, moods)
+        moods.pull(mood)
+        currentUser.deletedPoints += mood.points + specificJournal.points
         currentUser.save()
         res.json(journals);
     } catch(err) {
@@ -79,20 +84,21 @@ router.delete('/:journalId', verify, async (req, res) => {
 
 // update journal
 router.patch('/:journalId', verify, async (req, res) => {
-    try{
+    try {
         const currentUser = await User.findOne({ _id: req.user._id });
         const journals = currentUser.journalEntries
         const specificJournal = functions.getObject(req.params.journalId, journals)
         if (specificJournal === null) {
             res.json("Journal Entry not found")
         } 
+        const moods = currentUser.mood
+        const mood = functions.getObject(specificJournal.mood, moods)
         // update information
         if (req.body.post) {
-            mood = new Mood({scale: req.body.post.scale})
             specificJournal.title = req.body.post.title
             specificJournal.entry = req.body.post.entry,
             specificJournal.positives = req.body.post.positives,
-            specificJournal.mood = mood
+            mood.scale = req.body.post.scale
         }
         currentUser.save()
         res.json(specificJournal);

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Mood = require("./Mood").actual_model;
 
 const JournalEntrySchema = new mongoose.Schema({
     title: { 
@@ -21,7 +20,11 @@ const JournalEntrySchema = new mongoose.Schema({
         min: 2,
         max: 1024
     },
-    feeling: Mood,
+    // id of corresponding mood
+    mood: {
+        type: String, 
+        required: true
+    },
     points: {
         type: Number,
         default: 10
