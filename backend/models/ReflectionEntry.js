@@ -61,6 +61,11 @@ const ReflectionEntrySchema = new mongoose.Schema({
         type: Number,
         default: 20
     },
+    
+    extended: {
+        type: Boolean,
+        default: false
+    },
 
     dateCreated: {
         type: Date,

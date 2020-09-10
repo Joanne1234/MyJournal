@@ -5,6 +5,7 @@ const User = require("../models/User");
 const myValidSchemas = require("../validation");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const verify = require("./verify");
 
 // Validation
 
@@ -73,6 +74,15 @@ router.post("/login", async (req, res) => {
             .send(token);
     } catch (error) {
         return res.status(400).send(error);
+    }
+});
+
+router.get("/:userId", verify, async (req, res) => {
+    try {
+        const currentUser = await User.findOne({ _id: req.user._id });
+        res.json(currentUser);
+    } catch(err) {
+        res.json({message: err});
     }
 });
 
