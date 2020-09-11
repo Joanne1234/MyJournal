@@ -6,7 +6,11 @@ const myValidSchemas = require("../validation");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { verify, verifyRefresh} = require("./verify");
-const refreshTokens = []
+const { getPoints } = require('./helper');
+
+const accessTokenLifetime = '45m'
+const refreshTokenLifetime = '120m'
+
 // Validation
 
 router.post("/register", async (req, res) => {
@@ -38,16 +42,21 @@ router.post("/register", async (req, res) => {
     });
 
     try {
-        user.save();
+        
         // generate auth token and refresh token
-        const authToken = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '45m'});
-        const refreshToken = jwt.sign({_iser:user._id}, process.env.ACCESS_REFRESH_TOKEN, {expiresIn: '120m'})
-        refreshTokens.push(refreshToken)
+        const authToken = jwt.sign({ _id: user._id }, 
+            process.env.ACCESS_TOKEN_SECRET, 
+            {expiresIn: accessTokenLifetime});
+        const refreshToken = jwt.sign({_id: user._id}, 
+            process.env.ACCESS_REFRESH_TOKEN, 
+            {expiresIn: refreshTokenLifetime})
+        user.refreshTokens.push(refreshToken)
+        user.save();
         return res
             .status(200)
             .set("auth-token", authToken)
             .set("refresh-token", refreshToken)
-            .send({authToken, refreshToken});
+            .send({user, authToken, refreshToken});
     } catch (error) {
         res.status(400).send(error);
     }
@@ -70,9 +79,14 @@ router.post("/login", async (req, res) => {
 
     // create and assign token
     try {
-        const authToken = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '45m'});
-        const refreshToken = jwt.sign({_iser:user._id}, process.env.ACCESS_REFRESH_TOKEN, {expiresIn: '120m'})
-        refreshTokens.push(refreshToken)
+        const authToken = jwt.sign({ _id: user._id }, 
+            process.env.ACCESS_TOKEN_SECRET, 
+            {expiresIn: accessTokenLifetime});
+        const refreshToken = jwt.sign({_iser:user._id}, 
+            process.env.ACCESS_REFRESH_TOKEN, 
+            {expiresIn: refreshTokenLifetime})
+        user.refreshTokens.push(refreshToken)
+        user.save();
         return res
             .status(200)
             .set("auth-token", authToken)
@@ -84,9 +98,10 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/token", verifyRefresh, async (req, res) => {
-    const email = req.body.email
-    const currentUser = await User.findOne({ email: email });
-    const authToken = jwt.sign({ _id: currentUser._id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '20s'});
+    const currentUser = await User.findOne({ _id: req.user._id });
+    const authToken = jwt.sign({ _id: currentUser._id }, 
+        process.env.ACCESS_TOKEN_SECRET, 
+        {expiresIn: accessTokenLifetime});
     return res
         .status(200)
         .set("auth-token", authToken)
@@ -97,14 +112,10 @@ router.post("/logout", verify, async (req, res) => {
     
     // remove token from list
     try {
-        console.log("trying to logout")
         const refreshToken = req.header("refresh-token")
-        console.log(refreshToken)
-        console.log("here", refreshTokens)
-        //refreshTokens.pull(refreshToken)
-        refreshTokens = refreshTokens.filter(refreshToken => t !== refreshToken)
-        console.log("done")
-        //res.status(401).send('Logged out')
+        const user = await User.findOne({ _id: req.user._id });
+        user.refreshTokens.pull(refreshToken)
+        user.save()
         return res
             .status(200)
             .set("auth-token", null)
@@ -114,12 +125,16 @@ router.post("/logout", verify, async (req, res) => {
     }
 });
 
-router.get("/:userId", verify, async (req, res) => {
+router.get("/", verify, async (req, res) => {
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
-        res.json(currentUser);
+        var points = getPoints(currentUser.journalEntries)
+        points += getPoints(currentUser.reflectionEntries)
+        points += currentUser.deletedPoints
+        points += getPoints(currentUser.mood)
+        res.json({currentUser, points});
     } catch(err) {
-        res.json({message: err});
+        res.json({message: err}); 
     }
 });
 
