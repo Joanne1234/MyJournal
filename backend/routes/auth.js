@@ -5,8 +5,8 @@ const User = require("../models/User");
 const myValidSchemas = require("../validation");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const verify = require("./verify");
-
+const { verify, verifyRefresh} = require("./verify");
+const refreshTokens = []
 // Validation
 
 router.post("/register", async (req, res) => {
@@ -39,11 +39,15 @@ router.post("/register", async (req, res) => {
 
     try {
         user.save();
-        const token = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET);
+        // generate auth token and refresh token
+        const authToken = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '45m'});
+        const refreshToken = jwt.sign({_iser:user._id}, process.env.ACCESS_REFRESH_TOKEN, {expiresIn: '120m'})
+        refreshTokens.push(refreshToken)
         return res
             .status(200)
-            .set("auth-token", token)
-            .send(token);
+            .set("auth-token", authToken)
+            .set("refresh-token", refreshToken)
+            .send({authToken, refreshToken});
     } catch (error) {
         res.status(400).send(error);
     }
@@ -66,12 +70,45 @@ router.post("/login", async (req, res) => {
 
     // create and assign token
     try {
-        const token = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET);
-
+        const authToken = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '45m'});
+        const refreshToken = jwt.sign({_iser:user._id}, process.env.ACCESS_REFRESH_TOKEN, {expiresIn: '120m'})
+        refreshTokens.push(refreshToken)
         return res
             .status(200)
-            .set("auth-token", token)
-            .send(token);
+            .set("auth-token", authToken)
+            .set("refresh-token", refreshToken)
+            .send({authToken, refreshToken});
+    } catch (error) {
+        return res.status(400).send(error);
+    }
+});
+
+router.post("/token", verifyRefresh, async (req, res) => {
+    const email = req.body.email
+    const currentUser = await User.findOne({ email: email });
+    const authToken = jwt.sign({ _id: currentUser._id }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '20s'});
+    return res
+        .status(200)
+        .set("auth-token", authToken)
+        .send({authToken});
+})
+
+router.post("/logout", verify, async (req, res) => {
+    
+    // remove token from list
+    try {
+        console.log("trying to logout")
+        const refreshToken = req.header("refresh-token")
+        console.log(refreshToken)
+        console.log("here", refreshTokens)
+        //refreshTokens.pull(refreshToken)
+        refreshTokens = refreshTokens.filter(refreshToken => t !== refreshToken)
+        console.log("done")
+        //res.status(401).send('Logged out')
+        return res
+            .status(200)
+            .set("auth-token", null)
+            .send("Logged out");
     } catch (error) {
         return res.status(400).send(error);
     }

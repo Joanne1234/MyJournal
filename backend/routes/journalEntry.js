@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router();
-const verify = require("./verify");
+const {verify} = require("./verify");
 const JournalEntry = require("../models/JournalEntry");
 const User = require("../models/User");
 const functions = require('./helper');
