@@ -35,22 +35,17 @@ router.get('/:journalId', verify, async (req, res) => {
 // add new journal entry
 router.post("/", verify, async (req, res) => {
     try {
-        console.log("finding user:", req.user._id)
         const currentUser = await User.findOne({ _id: req.user._id });
-        console.log(currentUser)
         // create new journal entry
         const mood = new Mood({
             scale: req.body.post.scale
         })
-        console.log(mood)
-        console.log(req.body)
         const newJournal = new JournalEntry({
             title: req.body.post.title,
             entry: req.body.post.entry,
             positives: req.body.post.positives,
             mood: mood._id
         });
-        console.log("here")
         // save new journal to database
         currentUser.journalEntries.push(newJournal)
         currentUser.mood.push(mood)

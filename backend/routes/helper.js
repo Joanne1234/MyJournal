@@ -16,4 +16,4 @@ function getPoints(objects) {
     return points
 }
 
-module.exports = {getObject};
+module.exports = {getObject, getPoints};

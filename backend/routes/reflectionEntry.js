@@ -9,7 +9,6 @@ const Mood = require("../models/Mood");
 // On reflection page
 router.get("/",  verify, async (req, res) => {
     // get all reflection entries
-    console.log("getting reflection entries")
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
         const reflections = currentUser.reflectionEntries
@@ -48,17 +47,13 @@ router.post("/", verify, async (req, res) => {
         const moodAfter = new Mood({
             scale: req.body.post.scaleAfter
         })
-        console.log(moodBefore)
-        console.log(moodDuring)
-        console.log(moodAfter)
-        console.log(req.body)
         const newReflection = new ReflectionEntry({
             event: req.body.post.event,
             description: req.body.post.description,
             feelings: {
-                before: moodBefore,
-                during: moodDuring,
-                after: moodAfter
+                before: moodBefore._id,
+                during: moodDuring._id,
+                after: moodAfter._id
             },
             learnt: req.body.post.learnt
         });
@@ -72,7 +67,6 @@ router.post("/", verify, async (req, res) => {
             newReflection.points = newReflection.points*2
         }
         console.log(newReflection)
-        console.log("here")
         // save new reflection to database
         currentUser.reflectionEntries.push(newReflection)
         currentUser.mood.push(moodBefore)
@@ -94,6 +88,20 @@ router.delete('/:reflectionId', verify, async (req, res) => {
         // find reflection and remove from list of reflections
         const specificReflection = functions.getObject(req.params.reflectionId, reflections)
         reflections.pull(specificReflection)
+        const moods = currentUser.mood
+        const reflMoods = specificReflection.feelings
+        // get Mood object of each mood
+        const moodBefore = functions.getObject(reflMoods.before, moods)
+        const moodDuring = functions.getObject(reflMoods.during, moods)
+        const moodAfter = functions.getObject(reflMoods.after, moods)
+        const reflMoodsObject = [moodBefore, moodDuring, moodAfter]
+        // remove moods from the list
+        moods.pull(moodBefore)
+        moods.pull(moodDuring)
+        moods.pull(moodAfter)
+        // add points to deleted
+        currentUser.deletedPoints += specificReflection.points
+        currentUser.deletedPoints += functions.getPoints(reflMoodsObject)
         currentUser.save()
         res.json(reflections);
     } catch(err) {
@@ -107,31 +115,25 @@ router.patch('/:reflectionId', verify, async (req, res) => {
         const currentUser = await User.findOne({ _id: req.user._id });
         const reflections = currentUser.reflectionEntries
         const specificReflection = functions.getObject(req.params.reflectionId, reflections)
+        const moods = currentUser.mood
         console.log(specificReflection)
         if (specificReflection === null) {
             res.json("Reflection Entry not found")
         } 
         // update information
         if (req.body.post) {
-            console.log("to update:")
+            const reflMoods = specificReflection.feelings
             specificReflection.event = req.body.post.event
             specificReflection.description = req.body.post.description
-            const moodBefore = new Mood({
-                scale: req.body.post.scaleBefore
-            })
-            const moodDuring = new Mood({
-                scale: req.body.post.scaleDuring
-            })
-            const moodAfter = new Mood({
-                scale: req.body.post.scaleAfter
-            })
-            specificReflection.feelings = {
-                    before: moodBefore,
-                    during: moodDuring,
-                    after: moodAfter
-            }
+            // get Mood Objects
+            const moodBefore = functions.getObject(reflMoods.before, moods)
+            const moodDuring = functions.getObject(reflMoods.during, moods)
+            const moodAfter = functions.getObject(reflMoods.after, moods)
+            // update Moods
+            moodBefore.scale = req.body.post.scaleBefore
+            moodDuring.scale = req.body.post.scaleDuring
+            moodAfter.scale = req.body.post.scaleAfter
             specificReflection.learnt = req.body.post.learnt
-            console.log("here")
             // extra points if more detailed reflection is provided 
             if (req.body.post.extended) {
                 specificReflection.evaluation = req.body.post.evaluation
