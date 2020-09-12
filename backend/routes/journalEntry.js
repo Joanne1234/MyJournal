@@ -46,6 +46,7 @@ router.post("/", verify, async (req, res) => {
             positives: req.body.post.positives,
             mood: mood._id
         });
+        mood.parent = newJournal._id
         // save new journal to database
         currentUser.journalEntries.push(newJournal)
         currentUser.mood.push(mood)

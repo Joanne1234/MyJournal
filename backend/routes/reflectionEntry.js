@@ -57,6 +57,11 @@ router.post("/", verify, async (req, res) => {
             },
             learnt: req.body.post.learnt
         });
+        // update parent value of all moods
+        moodBefore.parent = newReflection._id
+        moodDuring.parent = newReflection._id
+        moodAfter.parent = newReflection._id
+
         // extra points if more detailed reflection is provided 
         if (req.body.post.extended === true) {
             newReflection.evaluation = true

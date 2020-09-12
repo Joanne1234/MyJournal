@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const router = require("express").Router();
 const User = require("../models/User");
+const RefreshTokens = require("../models/RefreshTokens");
 const myValidSchemas = require("../validation");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -42,7 +43,6 @@ router.post("/register", async (req, res) => {
     });
 
     try {
-        
         // generate auth token and refresh token
         const authToken = jwt.sign({ _id: user._id }, 
             process.env.ACCESS_TOKEN_SECRET, 
@@ -50,7 +50,8 @@ router.post("/register", async (req, res) => {
         const refreshToken = jwt.sign({_id: user._id}, 
             process.env.ACCESS_REFRESH_TOKEN, 
             {expiresIn: refreshTokenLifetime})
-        user.refreshTokens.push(refreshToken)
+        const token = new RefreshTokens({token: refreshToken, user: user._id})
+        token.save()
         user.save();
         return res
             .status(200)
@@ -85,7 +86,8 @@ router.post("/login", async (req, res) => {
         const refreshToken = jwt.sign({_iser:user._id}, 
             process.env.ACCESS_REFRESH_TOKEN, 
             {expiresIn: refreshTokenLifetime})
-        user.refreshTokens.push(refreshToken)
+        const token = new RefreshTokens({token: refreshToken, user: user._id})
+        token.save()
         user.save();
         return res
             .status(200)
@@ -98,8 +100,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/token", verifyRefresh, async (req, res) => {
-    const currentUser = await User.findOne({ _id: req.user._id });
-    const authToken = jwt.sign({ _id: currentUser._id }, 
+    const authToken = jwt.sign({ _id: req.user._id }, 
         process.env.ACCESS_TOKEN_SECRET, 
         {expiresIn: accessTokenLifetime});
     return res
@@ -110,12 +111,9 @@ router.post("/token", verifyRefresh, async (req, res) => {
 
 router.post("/logout", verify, async (req, res) => {
     
-    // remove token from list
+    // remove all refresh tokens from user from list
     try {
-        const refreshToken = req.header("refresh-token")
-        const user = await User.findOne({ _id: req.user._id });
-        user.refreshTokens.pull(refreshToken)
-        user.save()
+        await RefreshTokens.deleteMany({user: req.user._id})
         return res
             .status(200)
             .set("auth-token", null)

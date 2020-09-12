@@ -9,6 +9,11 @@ const MoodSchema = new mongoose.Schema({
         max: 10
     },
 
+    parent: {
+        type: String,
+        default: null
+    },
+
     points: {
         type: Number,
         default: 5

@@ -9,6 +9,7 @@ const app = express();
 const authRoute = require("./routes/auth");
 const journalRoute = require("./routes/journalEntry");
 const reflectionRoute = require("./routes/reflectionEntry");
+const moodRoute = require("./routes/mood");
 
 
 // Connect to database
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/user", authRoute);
 app.use("/api/journalEntries", journalRoute);
 app.use("/api/reflectionEntries", reflectionRoute);
+app.use("/api/moods", moodRoute);
 
 // Listen to incoming connections
 app.listen(5000, (err) => {
