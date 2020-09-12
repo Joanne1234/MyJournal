@@ -65,7 +65,10 @@ function getRemainingPoints(user) {
 // filter unnecessary pet information and return extra information
 function getPetInfo(pet) {
     const foodRequiredToLevelUp = checkFoodLeft(pet.overallFoodIntake, pet.level)
-    updatePetHealth(pet)
+    const petHealth = updatePetHealth(pet)
+    if (petHealth) {
+        return petHealth
+    }
     const petInfo = {
         name: pet.name,
         level: pet.level,
@@ -82,6 +85,50 @@ function updatePetHealth (pet) {
     const petHealth = health - dailyIntake*differenceInDays(pet.lastFed, Date.now())
    // update health of pet
     pet.health = petHealth
+    if (pet.health <= 0) {
+        pet.health = 0
+        return petDie(pet)
+    }
+    return null
+}
+
+// if health reaches 0, pet will die/revert to level 0
+function petDie (pet) {
+    const petInfo = {
+        name: pet.name,
+        level: 0,
+        overallFoodIntake: 0,
+        foodRequiredToLevelUp: checkFoodLeft(0, 0),
+        health: pet.health
+    }
+    return petInfo
+}
+
+// full revival of pet
+function petFullRevive (pet) {
+    pet.health = 10
+    const petInfo = {
+        name: pet.name,
+        level: pet.level,
+        overallFoodIntake: pet.overallFoodIntake,
+        foodRequiredToLevelUp: checkFoodLeft(pet.overallFoodIntake, pet.level),
+        health: pet.health
+    }
+    return petInfo
+}
+// basic revival of pet
+function petBasicRevive (pet) {
+    pet.level = 0
+    pet.overallFoodIntake = 0
+    pet.health = 5
+    const petInfo = {
+        name: pet.name,
+        level: pet.level,
+        overallFoodIntake: pet.overallFoodIntake,
+        foodRequiredToLevelUp: checkFoodLeft(pet.overallFoodIntake, pet.level),
+        health: pet.health
+    }
+    return petInfo
 }
 
 // level up system
@@ -112,5 +159,7 @@ module.exports = {
     getPetInfo,
     checkLevelUp,
     getUserInfo,
-    updatePetHealth
+    updatePetHealth,
+    petBasicRevive,
+    petFullRevive
 };

@@ -2,10 +2,13 @@ const express = require("express")
 const router = express.Router();
 const {verify} = require("./verify");
 const User = require("../models/User");
-const {getPetInfo, 
+const {
+    getPetInfo, 
     getTotalPoints, 
     checkLevelUp,
-    updatePetHealth
+    updatePetHealth,
+    petBasicRevive,
+    petFullRevive
 } = require('./helper');
 
 // On pet page
@@ -51,6 +54,28 @@ router.post("/", verify, async (req, res) => {
         pet.lastFed = Date.now()
         // feed pet and save
         const petInfo = getPetInfo(pet)
+        currentUser.save()
+        res.json(petInfo);
+    } catch(err) {
+        res.json({message: err});
+    }
+});
+
+// feed pet
+router.post("/revive", verify, async (req, res) => {
+    try {
+        const currentUser = await User.findOne({ _id: req.user._id });
+        const pet = currentUser.petInfo
+        console.log(pet)
+        var petInfo = null
+        if (req.body.post) {
+            if (req.body.post.revive == true) {
+                petInfo = petFullRevive(pet)
+            } else {
+                currentUser.deletedPoints += pet.overallFoodIntake
+                petInfo = petBasicRevive(pet)
+            }
+        } 
         currentUser.save()
         res.json(petInfo);
     } catch(err) {
