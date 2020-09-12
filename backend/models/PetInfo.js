@@ -1,17 +1,24 @@
 const mongoose = require("mongoose");
 
 const PetInfoSchema = new mongoose.Schema({
-    name:{ 
+    name: { 
         type: String, 
-        required: true, 
+        default: "Rocky", 
         max: 255, 
         min: 2 
     },
 
+    health: {
+        type: Number,
+        default: 100,
+        min: 0,
+        max: 120
+    },
+
     level: {
         type: Number,
-        default: 1,
-        min: 1,
+        default: 0,
+        min: 0,
         max: 100
     },
 
@@ -21,7 +28,12 @@ const PetInfoSchema = new mongoose.Schema({
         min: 0,
         max: 10000
     },
-    
+
+    lastFed: {
+        type: Date,
+        default: Date.now
+    },
+
     dateCreated: {
         type: Date,
         default: Date.now,

@@ -50,8 +50,8 @@ const userSchema = new mongoose.Schema({
     },
 
     // pet 'eats' the points/exp/food and slowly dies without it
-
     petInfo: PetInfo,
+
 });
 
 module.exports = mongoose.model("User", userSchema);

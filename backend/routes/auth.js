@@ -7,7 +7,8 @@ const myValidSchemas = require("../validation");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { verify, verifyRefresh} = require("./verify");
-const { getPoints } = require('./helper');
+const { getTotalPoints, getRemainingPoints, getUserInfo } = require('./helper');
+const PetInfo = require('../models/PetInfo');
 
 const accessTokenLifetime = '45m'
 const refreshTokenLifetime = '120m'
@@ -39,7 +40,8 @@ router.post("/register", async (req, res) => {
     const user = new User({
         name: req.body.name,
         email: req.body.email,
-        password: hashedPassword
+        password: hashedPassword,
+        petInfo: new PetInfo()
     });
 
     try {
@@ -126,11 +128,8 @@ router.post("/logout", verify, async (req, res) => {
 router.get("/", verify, async (req, res) => {
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
-        var points = getPoints(currentUser.journalEntries)
-        points += getPoints(currentUser.reflectionEntries)
-        points += currentUser.deletedPoints
-        points += getPoints(currentUser.mood)
-        res.json({currentUser, points});
+        const userInfo = getUserInfo(currentUser)
+        res.json(userInfo);
     } catch(err) {
         res.json({message: err}); 
     }

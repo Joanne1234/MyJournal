@@ -10,6 +10,7 @@ const authRoute = require("./routes/auth");
 const journalRoute = require("./routes/journalEntry");
 const reflectionRoute = require("./routes/reflectionEntry");
 const moodRoute = require("./routes/mood");
+const petRoute = require("./routes/pet");
 
 
 // Connect to database
@@ -26,6 +27,7 @@ app.use("/api/user", authRoute);
 app.use("/api/journalEntries", journalRoute);
 app.use("/api/reflectionEntries", reflectionRoute);
 app.use("/api/moods", moodRoute);
+app.use("/api/pet", petRoute);
 
 // Listen to incoming connections
 app.listen(5000, (err) => {
