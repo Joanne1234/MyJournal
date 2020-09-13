@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 
 // Functions
 const app = express();
+const port = process.env.PORT || 5000
+const CONNECTION_URI = process.env.DB_CONNECTION
 
 // Import routes
 const authRoute = require("./routes/auth");
@@ -31,7 +33,7 @@ app.use("/api/pet", petRoute);
 app.use("/api/misc", miscRoute);
 
 // Listen to incoming connections
-app.listen(5000, (err) => {
+app.listen(port, (err) => {
     if (err) {
         console.log(err);
     } else {
