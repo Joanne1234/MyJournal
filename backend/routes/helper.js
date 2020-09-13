@@ -150,6 +150,46 @@ function checkDailyIntake (currentLevel) {
     return Math.round(currentLevel*0.5)
 }
 
+// wrapper function to expand 'mood' in journal entry
+function getJournalInfo (journal, moods) {
+    const mood = getObject(journal.mood, moods)
+    const journalInfo = {
+        title: journal.title,
+        entry: journal. entry,
+        positives: journal.positives,
+        mood: mood,
+        points: journal.points,
+        dateCreated: journal.dateCreated,
+        _id: journal._id
+    }
+    return journalInfo
+}
+
+// wrapper function to expand 'mood' in reflection entry
+function getReflectionInfo (reflection, moods) {
+    const moodBefore = getObject(reflection.feelings.before, moods)
+    const moodDuring = getObject(reflection.feelings.during, moods)
+    const moodAfter = getObject(reflection.feelings.after, moods)
+    const reflectionInfo = {
+        event: reflection.event,
+        description: reflection. description,
+        learnt: reflection.learnt,
+        feelings: {
+            moodBefore: moodBefore,
+            moodDuring: moodDuring,
+            moodAfter: moodAfter
+        },
+        evaluation: reflection.evaluation,
+        analysis: reflection.analysis,
+        conclusion: reflection.conclusion,
+        actionPlan: reflection.actionPlan,
+        points: reflection.points,
+        dateCreated: reflection.dateCreated,
+        _id: reflection._id
+    }
+    return reflectionInfo
+}
+
 module.exports = {
     getObject, 
     getPoints, 
@@ -161,5 +201,7 @@ module.exports = {
     getUserInfo,
     updatePetHealth,
     petBasicRevive,
-    petFullRevive
+    petFullRevive,
+    getJournalInfo,
+    getReflectionInfo
 };

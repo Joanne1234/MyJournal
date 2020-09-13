@@ -36,7 +36,7 @@ router.post("/", verify, async (req, res) => {
         const currentUser = await User.findOne({ _id: req.user._id });
         // create new mood entry
         const newMood = new Mood({
-            scale: req.body.post.scale
+            scale: req.body.post.mood
         })
         // add to list and save
         currentUser.mood.push(newMood)
@@ -57,8 +57,8 @@ router.patch('/:moodId', verify, async (req, res) => {
             res.json("Mood Entry not found")
         } 
         // update information and save
-        if (req.body.post.scale) {
-            specificMood.scale = req.body.post.scale
+        if (req.body.post.mood) {
+            specificMood.scale = req.body.post.mood
         }
         currentUser.save()
         res.json(specificMood);

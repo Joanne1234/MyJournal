@@ -5,6 +5,7 @@ const JournalEntry = require("../models/JournalEntry");
 const User = require("../models/User");
 const functions = require('./helper');
 const Mood = require("../models/Mood");
+const { getObject, getJournalInfo } = require("./helper");
 
 // On journal entry page
 router.get("/",  verify, async (req, res) => {
@@ -12,8 +13,9 @@ router.get("/",  verify, async (req, res) => {
     console.log("getting journal entries")
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
+        const moods = currentUser.mood
         const journals = currentUser.journalEntries
-        res.json(journals);
+        res.json(getAllJournalInfo(journals, moods));
     } catch(err) {
         res.json({message: err});
     }
@@ -25,7 +27,7 @@ router.get('/:journalId', verify, async (req, res) => {
         const currentUser = await User.findOne({ _id: req.user._id });
         const journals = currentUser.journalEntries
         const specificJournal = functions.getObject(req.params.journalId, journals)
-        res.json(specificJournal);
+        res.json(getJournalInfo(specificJournal, currentUser.mood));
     } catch (err) {
         res.json({message: err});
     }
@@ -38,7 +40,7 @@ router.post("/", verify, async (req, res) => {
         const currentUser = await User.findOne({ _id: req.user._id });
         // create new journal entry
         const mood = new Mood({
-            scale: req.body.post.scale
+            scale: req.body.post.mood
         })
         const newJournal = new JournalEntry({
             title: req.body.post.title,
@@ -50,9 +52,9 @@ router.post("/", verify, async (req, res) => {
         // save new journal to database
         currentUser.journalEntries.push(newJournal)
         currentUser.mood.push(mood)
+        console.log(getJournalInfo(newJournal, currentUser.mood))
         currentUser.save()
-        console.log(currentUser)
-        res.json(newJournal);
+        res.json(getJournalInfo(newJournal, currentUser.mood));
     } catch(err) {
         res.json({message: err});
     }
@@ -72,7 +74,7 @@ router.delete('/:journalId', verify, async (req, res) => {
         moods.pull(mood)
         currentUser.deletedPoints += mood.points + specificJournal.points
         currentUser.save()
-        res.json(journals);
+        res.json(getAllJournalInfo(journals, moods));
     } catch(err) {
         res.json({message: err});
     }
@@ -94,13 +96,22 @@ router.patch('/:journalId', verify, async (req, res) => {
             specificJournal.title = req.body.post.title
             specificJournal.entry = req.body.post.entry,
             specificJournal.positives = req.body.post.positives,
-            mood.scale = req.body.post.scale
+            mood.scale = req.body.post.mood
         }
         currentUser.save()
-        res.json(specificJournal);
+        res.json(getJournalInfo(specificJournal, currentUser.mood));
     } catch(err) {
         res.json({message: err});
     }
 });
+
+function getAllJournalInfo(journals, moods) {
+    var journalsInfo = []
+    for (j in journals) {
+        const journalInfo = getJournalInfo(journals[j], moods)
+        journalsInfo.push(journalInfo)
+    }
+    return journalsInfo
+}
 
 module.exports = router;
