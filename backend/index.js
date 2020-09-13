@@ -11,7 +11,7 @@ const journalRoute = require("./routes/journalEntry");
 const reflectionRoute = require("./routes/reflectionEntry");
 const moodRoute = require("./routes/mood");
 const petRoute = require("./routes/pet");
-
+const miscRoute = require("./routes/misc")
 
 // Connect to database
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true }, (err) =>
@@ -24,10 +24,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Route middlewares
 app.use("/api/user", authRoute);
-app.use("/api/journalEntries", journalRoute);
-app.use("/api/reflectionEntries", reflectionRoute);
+app.use("/api/journal", journalRoute);
+app.use("/api/reflection", reflectionRoute);
 app.use("/api/moods", moodRoute);
 app.use("/api/pet", petRoute);
+app.use("/api/misc", miscRoute);
 
 // Listen to incoming connections
 app.listen(5000, (err) => {

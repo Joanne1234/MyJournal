@@ -101,6 +101,24 @@ router.post("/login", async (req, res) => {
     }
 });
 
+router.patch("/details", verify, async (req, res) => {
+    try {
+        const currentUser = await User.findOne({ _id: req.user._id });
+        const name = req.body.name
+        const password = req.body.password
+        if (name) {
+            currentUser.name = name
+        }
+        if (password) {
+            currentUser.password = password
+        }
+        currentUser.save()
+        res.json(getUserInfo(currentUser));
+    } catch(err) {
+        res.json({message: err});
+    }
+})
+
 router.post("/token", verifyRefresh, async (req, res) => {
     const authToken = jwt.sign({ _id: req.user._id }, 
         process.env.ACCESS_TOKEN_SECRET, 

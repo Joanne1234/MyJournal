@@ -5,6 +5,7 @@ const ReflectionEntry = require("../models/ReflectionEntry");
 const User = require("../models/User");
 const functions = require('./helper');
 const Mood = require("../models/Mood");
+const { getReflectionInfo } = require("./helper");
 
 // On reflection page
 router.get("/",  verify, async (req, res) => {
@@ -12,7 +13,7 @@ router.get("/",  verify, async (req, res) => {
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
         const reflections = currentUser.reflectionEntries
-        res.json(reflections);
+        res.json(getAllReflectionInfo(reflections, currentUser.mood));
     } catch(err) {
         res.json({message: err});
     }
@@ -24,7 +25,7 @@ router.get('/:reflectionId', verify, async (req, res) => {
         const currentUser = await User.findOne({ _id: req.user._id });
         const reflections = currentUser.reflectionEntries
         const specificReflection = functions.getObject(req.params.reflectionId, reflections)
-        res.json(specificReflection);
+        res.json(getReflectionInfo(specificReflection, currentUser.mood));
     } catch (err) {
         res.json({message: err});
     }
@@ -39,13 +40,13 @@ router.post("/", verify, async (req, res) => {
         console.log(currentUser)
         // create new reflection entry
         const moodBefore = new Mood({
-            scale: req.body.post.scaleBefore
+            scale: req.body.post.moodBefore
         })
         const moodDuring = new Mood({
-            scale: req.body.post.scaleDuring
+            scale: req.body.post.moodDuring
         })
         const moodAfter = new Mood({
-            scale: req.body.post.scaleAfter
+            scale: req.body.post.moodAfter
         })
         const newReflection = new ReflectionEntry({
             event: req.body.post.event,
@@ -79,7 +80,7 @@ router.post("/", verify, async (req, res) => {
         currentUser.mood.push(moodAfter)
         currentUser.save()
         console.log(currentUser)
-        res.json(newReflection);
+        res.json(getReflectionInfo(newReflection, currentUser.mood));
     } catch(err) {
         res.json({message: err});
     }
@@ -108,7 +109,7 @@ router.delete('/:reflectionId', verify, async (req, res) => {
         currentUser.deletedPoints += specificReflection.points
         currentUser.deletedPoints += functions.getPoints(reflMoodsObject)
         currentUser.save()
-        res.json(reflections);
+        res.json(getAllReflectionInfo(reflections, moods));
     } catch(err) {
         res.json({message: err});
     }
@@ -135,9 +136,9 @@ router.patch('/:reflectionId', verify, async (req, res) => {
             const moodDuring = functions.getObject(reflMoods.during, moods)
             const moodAfter = functions.getObject(reflMoods.after, moods)
             // update Moods
-            moodBefore.scale = req.body.post.scaleBefore
-            moodDuring.scale = req.body.post.scaleDuring
-            moodAfter.scale = req.body.post.scaleAfter
+            moodBefore.scale = req.body.post.moodBefore
+            moodDuring.scale = req.body.post.moodDuring
+            moodAfter.scale = req.body.post.moodAfter
             specificReflection.learnt = req.body.post.learnt
             // extra points if more detailed reflection is provided 
             if (req.body.post.extended) {
@@ -153,10 +154,20 @@ router.patch('/:reflectionId', verify, async (req, res) => {
         }
         console.log(specificReflection)
         currentUser.save()
-        res.json(specificReflection);
+        res.json(getReflectionInfo(specificReflection, currentUser.mood));
     } catch(err) {
         res.json({message: err});
     }
 });
+
+function getAllReflectionInfo(reflections, moods) {
+    var reflectionsInfo = []
+    for (r in reflections) {
+        const reflectionInfo = getReflectionInfo(reflections[r], moods)
+        reflectionsInfo.push(reflectionInfo)
+    }
+    return reflectionsInfo
+}
+
 
 module.exports = router;
