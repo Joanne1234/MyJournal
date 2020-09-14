@@ -61,13 +61,14 @@ router.post("/", verify, async (req, res) => {
     }
 });
 
-// feed pet
+// revive pet
 router.post("/revive", verify, async (req, res) => {
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
         const pet = currentUser.petInfo
         console.log(pet)
         var petInfo = null
+        // vary information depending on what type of revive chosen
         if (req.body.post) {
             if (req.body.post.revive == true) {
                 petInfo = petFullRevive(pet)
