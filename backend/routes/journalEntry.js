@@ -40,7 +40,10 @@ router.post("/", verify, async (req, res) => {
         const currentUser = await User.findOne({ _id: req.user._id });
         // create new journal entry
         const mood = new Mood({
-            scale: req.body.post.mood
+            scale: req.body.post.mood,
+            parent: {
+                journal: true
+            }
         })
         const newJournal = new JournalEntry({
             title: req.body.post.title,
@@ -48,7 +51,7 @@ router.post("/", verify, async (req, res) => {
             positives: req.body.post.positives,
             mood: mood._id
         });
-        mood.parent = newJournal._id
+        mood.parent.id = newJournal._id
         // save new journal to database
         currentUser.journalEntries.push(newJournal)
         currentUser.mood.push(mood)

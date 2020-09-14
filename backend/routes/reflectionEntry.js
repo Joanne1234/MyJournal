@@ -40,13 +40,22 @@ router.post("/", verify, async (req, res) => {
         console.log(currentUser)
         // create new reflection entry
         const moodBefore = new Mood({
-            scale: req.body.post.moodBefore
+            scale: req.body.post.moodBefore,
+            parent: {
+                reflection: true
+            }
         })
         const moodDuring = new Mood({
-            scale: req.body.post.moodDuring
+            scale: req.body.post.moodDuring,
+            parent: {
+                reflection: true
+            }
         })
         const moodAfter = new Mood({
-            scale: req.body.post.moodAfter
+            scale: req.body.post.moodAfter,
+            parent: {
+                reflection: true
+            }
         })
         const newReflection = new ReflectionEntry({
             event: req.body.post.event,
@@ -59,9 +68,9 @@ router.post("/", verify, async (req, res) => {
             learnt: req.body.post.learnt
         });
         // update parent value of all moods
-        moodBefore.parent = newReflection._id
-        moodDuring.parent = newReflection._id
-        moodAfter.parent = newReflection._id
+        moodBefore.parent.id = newReflection._id
+        moodDuring.parent.id = newReflection._id
+        moodAfter.parent.id = newReflection._id
 
         // extra points if more detailed reflection is provided 
         if (req.body.post.extended === true) {

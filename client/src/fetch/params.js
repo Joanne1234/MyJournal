@@ -2,7 +2,7 @@ function getHeader() {
     return({
         Accept: "application/json",
         "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjVmMTkxMTUxMGViN2IzNTBiYzQzNzkiLCJpYXQiOjE2MDAwNzA2NjYsImV4cCI6MTYwMDA3MzM2Nn0.TF85MKWYdNH0tXc9GpnhFUv8KwMi7Vlba3ZL1nplF8I"
+        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjVmMTkxMTUxMGViN2IzNTBiYzQzNzkiLCJpYXQiOjE2MDAwNzgxMTEsImV4cCI6MTYwMDA4MDgxMX0.7Xhu2pKg4u8ZflpdjntrLeUU9olD1lNmKhFSQPGOqYA"
     })
 }
 

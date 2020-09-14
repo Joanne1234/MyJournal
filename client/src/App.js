@@ -1,14 +1,15 @@
 import React from 'react';
 import './App.css';
-import MoodInput from './components/Mood'
+import { MoodInput, ViewMoods } from './components/Mood'
 
 const url = "http://localhost:5000/api/"
 
 function App() {
+  console.log("rendering ap...")
   return (
     <div className="App">
       <h1>My Secret Garden</h1>
-      <MoodInput moodUrl={url+"moods"}/>
+      <ViewMoods moodUrl={url+"moods"}/>
     </div>
   );
 }

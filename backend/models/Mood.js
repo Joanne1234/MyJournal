@@ -13,8 +13,18 @@ const MoodSchema = new mongoose.Schema({
         default: null
     },
     parent: {
-        type: String,
-        default: null
+        journal: {
+            type: Boolean,
+            default: false
+        },
+        reflection: {
+            type: Boolean,
+            default: false
+        },
+        id: {
+            type: String,
+            default: null
+        }
     },
 
     points: {
