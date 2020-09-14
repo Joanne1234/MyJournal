@@ -37,7 +37,7 @@ router.post("/", verify, async (req, res) => {
         // create new mood entry
         const newMood = new Mood({
             scale: req.body.post.mood,
-            description: req.body.post.description
+            comments: req.body.post.comments
         })
         // add to list and save
         currentUser.mood.push(newMood)
@@ -60,7 +60,7 @@ router.patch('/:moodId', verify, async (req, res) => {
         // update information and save
         if (req.body.post.mood) {
             specificMood.scale = req.body.post.mood
-            specificMood.description = req.body.post.description
+            specificMood.comments = req.body.post.comments
         }
         currentUser.save()
         res.json(specificMood);

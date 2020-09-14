@@ -20,18 +20,19 @@ const moodSlider = {
     padding: 5
 }
 
-async function submitMood(postUrl, id, scale, description) {
-    console.log("patchmood...", scale, description, id)
+async function submitMood(postUrl, id, scale, comments) {
+    console.log("patchmood...", scale, comments, id)
     const newMood = {
         mood: scale,
-        description: description
+        comments: comments
     }
     var newPost = null
     if (id != null) {
         postUrl+= "/" + id
         newPost = await patch(postUrl, newMood)
     } else {
-        newPost = await makeNewPost(postUrl, newMood)
+      console.log("new post...", postUrl, newMood)  
+      newPost = await makeNewPost(postUrl, newMood)
     }
     if (newPost) {
         console.log(newPost)
@@ -40,44 +41,72 @@ async function submitMood(postUrl, id, scale, description) {
     }
 }
 
-const MoodInput = React.memo(({moodUrl}) => {
-    const [scale, setScale] = useState(0)
-    const [des, setDes] = useState("")
-    const [id, setID] = useState(null)
-    return (
-      <div style={moodStyle}>
-        <form>
-          <p>How are you feeling today? </p>
-          <div style={moodSlider}>
-            <Slider
-              min={-1}
-              max={10}
-              onChange={(value) => {
-                setScale(value)
-            }}
-            />
-            <p>{scale}</p>
-          </div>
-          <p>How would you describe your day?</p>
-          <input 
-            type="text"
-            onChange={(e) => {
-                setDes(e.target.value)
-            }}
-          />
-          <button 
-            title = "Done"
+// wrapper around mood input section
+const MoodForm = React.memo(({moodUrl}) => {
+  const [scale, setScale] = useState(0)
+  const [com, setCom] = useState("")
+  const [id, setID] = useState(null)
+  return (
+    <div style={moodStyle}>
+      <form>
+        <MoodInput 
+          text1="How are you feeling today?" 
+          scale={scale}
+          setScale={setScale}
+          setCom={setCom}
+          com={com}
+        />
+        <p/>
+        <button 
+          title = "Done"
+          onClick={async (e) => {
+              e.preventDefault()
+              const newID = await submitMood(moodUrl, id, scale, com)
+              setID(newID)
+              console.log("newID", newID)
+          }}
+        > 
+          Save 
+        </button>
+        <button 
+            title = "Back"
             onClick={async (e) => {
                 e.preventDefault()
-                const newID = await submitMood(moodUrl, id, scale, des)
-                setID(newID)
-                console.log("newID", newID)
             }}
           > 
-            Save 
-          </button>
+            Back 
+        </button>
+      </form>
+    </div>
+  )
+})
 
-        </form>
+const MoodInput = React.memo(({text1, scale, setScale, setCom, com}) => {
+    /*const [scale, setScale] = useState(0)
+    const [com, setCom] = useState("")
+    const [id, setID] = useState(null)*/
+    return (
+      <div>
+        <p>{text1} </p>
+        <div style={moodSlider}>
+          <Slider
+            min={-1}
+            max={10}
+            value={scale}
+            onChange={(value) => {
+            setScale(value)
+            }}
+          />
+          <p>{scale}</p>
+        </div>
+        <p>Any comments?</p>
+        <input 
+          type="text"
+          value={com}
+          onChange={(e) => {
+            setCom(e.target.value)
+          }}
+        />
       </div>
     );
 })
@@ -105,7 +134,7 @@ const ViewMood = ({mood}) => {
     return (
       <div style={moodStyle}>
           <p>{date.toString()}</p>
-          <p>Rating: {scale}/10 </p>
+          <p>Mood: {scale}/10 </p>
           <p>{des}</p>
       </div>)
 }
@@ -131,4 +160,4 @@ const ViewMoods = ({moodUrl}) => {
     </div>)
 }
 
-export {MoodInput, ViewMoods, ViewMood};
+export {MoodInput, ViewMoods, ViewMood, MoodForm};

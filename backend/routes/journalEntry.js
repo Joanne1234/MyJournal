@@ -41,6 +41,7 @@ router.post("/", verify, async (req, res) => {
         // create new journal entry
         const mood = new Mood({
             scale: req.body.post.mood,
+            comments: req.body.post.comments,
             parent: {
                 journal: true
             }
@@ -99,7 +100,8 @@ router.patch('/:journalId', verify, async (req, res) => {
             specificJournal.title = req.body.post.title
             specificJournal.entry = req.body.post.entry,
             specificJournal.positives = req.body.post.positives,
-            mood.scale = req.body.post.mood
+            mood.scale = req.body.post.mood,
+            mood.comments = req.body.post.comments
         }
         currentUser.save()
         res.json(getJournalInfo(specificJournal, currentUser.mood));

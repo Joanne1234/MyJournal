@@ -41,18 +41,21 @@ router.post("/", verify, async (req, res) => {
         // create new reflection entry
         const moodBefore = new Mood({
             scale: req.body.post.moodBefore,
+            comments: req.body.post.commentsBefore,
             parent: {
                 reflection: true
             }
         })
         const moodDuring = new Mood({
             scale: req.body.post.moodDuring,
+            comments: req.body.post.commentsDuring,
             parent: {
                 reflection: true
             }
         })
         const moodAfter = new Mood({
             scale: req.body.post.moodAfter,
+            comments: req.body.post.commentsAfter,
             parent: {
                 reflection: true
             }
@@ -148,6 +151,9 @@ router.patch('/:reflectionId', verify, async (req, res) => {
             moodBefore.scale = req.body.post.moodBefore
             moodDuring.scale = req.body.post.moodDuring
             moodAfter.scale = req.body.post.moodAfter
+            moodBefore.comments = req.body.post.commentsBefore
+            moodBefore.comments = req.body.post.commentsDuring
+            moodBefore.comments = req.body.post.commentsAfter
             specificReflection.learnt = req.body.post.learnt
             // extra points if more detailed reflection is provided 
             if (req.body.post.extended) {

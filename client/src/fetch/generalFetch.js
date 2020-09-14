@@ -10,8 +10,6 @@ async function makeNewPost(url, post) {
     let res = null;
     try {
         console.log(url, post)
-        console.log(getPOSTParams(post))
-        console.log(getGETParams())
         res = await fetch(url, getPOSTParams(post))
         res = await res.json()
         return res

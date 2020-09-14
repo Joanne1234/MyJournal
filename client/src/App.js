@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
-import { MoodInput, ViewMoods } from './components/Mood'
+import { MoodForm, ViewMoods } from './components/Mood'
+import { JournalInput, ViewJournals } from './components/Journal'
 
 const url = "http://localhost:5000/api/"
 
@@ -9,7 +10,8 @@ function App() {
   return (
     <div className="App">
       <h1>My Secret Garden</h1>
-      <ViewMoods moodUrl={url+"moods"}/>
+      <JournalInput journalUrl={url+"journal"}/>
+      <ViewJournals journalUrl={url+"journal"}/>
     </div>
   );
 }
