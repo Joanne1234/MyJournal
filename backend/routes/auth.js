@@ -18,13 +18,13 @@ const refreshTokenLifetime = '120m'
 router.post("/register", async (req, res) => {
     // Validate data
     
-    const { error } = myValidSchemas.RegisterationValidation.validate(req.body);
+    const { error } = myValidSchemas.RegisterationValidation.validate(req.body.post);
 
     if (error) return res.status(400).send("Invalid Details");
 
     // Check if user exists in the data base
 
-    const EmailExists = await User.findOne({ email: req.body.email });
+    const EmailExists = await User.findOne({ email: req.body.post.email });
 
     if (EmailExists) {
         return res.status(400).send("Email already exists");
@@ -33,13 +33,13 @@ router.post("/register", async (req, res) => {
     // Hash password
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const hashedPassword = await bcrypt.hash(req.body.post.password, salt);
 
     // Save to data base
 
     const user = new User({
-        name: req.body.name,
-        email: req.body.email,
+        name: req.body.post.name,
+        email: req.body.post.email,
         password: hashedPassword,
         petInfo: new PetInfo()
     });
@@ -66,10 +66,10 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-    const { error } = myValidSchemas.LogInValidation.validate(req.body);
+    const { error } = myValidSchemas.LogInValidation.validate(req.body.post);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.post.email });
 
     // check user email exists
     if (!user) {
@@ -77,7 +77,7 @@ router.post("/login", async (req, res) => {
     }
 
     // check password is correct
-    const validPass = await bcrypt.compare(req.body.password, user.password);
+    const validPass = await bcrypt.compare(req.body.post.password, user.password);
     if (!validPass) return res.status(500).send("Invalid Password");
 
     // create and assign token
@@ -104,8 +104,8 @@ router.post("/login", async (req, res) => {
 router.patch("/details", verify, async (req, res) => {
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
-        const name = req.body.name
-        const password = req.body.password
+        const name = req.body.post.name
+        const password = req.body.post.password
         if (name) {
             currentUser.name = name
         }

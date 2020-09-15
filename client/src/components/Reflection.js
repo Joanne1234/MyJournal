@@ -7,14 +7,14 @@ import {
 } from '../fetch/generalFetch';
 import { MoodInput } from './Mood';
 
-const journalStyle = {
+const reflectionStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid palegreen"
+    outline: "thick solid lavender"
 }
 
-async function submitJournal(postUrl, id, title, entry, positives, scale, comments) {
+async function submitReflection(postUrl, id, title, entry, positives, scale, comments) {
     console.log("patchjournal...", title, entry, positives, scale)
     const newEntryDetails = {
         title: title,
@@ -36,8 +36,8 @@ async function submitJournal(postUrl, id, title, entry, positives, scale, commen
         return id
     }
 }
-async function deleteJournal(url, id, setChange) {
-    console.log("deletejournal...", url, id)
+async function deleteReflection(url, id, setChange) {
+    console.log("deletereflection...", url, id)
     if (id != null) {
         url+= "/" + id
         const result = await deleteObject(url)
@@ -48,7 +48,7 @@ async function deleteJournal(url, id, setChange) {
     } 
     return []
 }
-const JournalInput = React.memo(({journalUrl, journal}) => {
+const ReflectionInput = React.memo(({journalUrl, journal}) => {
     const [title, setTitle] = useState("")
     const [entry, setEntry] = useState("")
     const [positives, setPositives] = useState("")
@@ -63,7 +63,7 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
         setPositives(journal.positives)
     }
     return (
-      <div style={journalStyle}>
+      <div style={reflectionStyle}>
         <form>
           <p>Entry Title: 
           <input 
@@ -102,7 +102,7 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
             title = "Save"
             onClick={async (e) => {
                 e.preventDefault()
-                const newID = await submitJournal(journalUrl, id, title, entry, positives, mood, com)
+                const newID = await submitReflection(journalUrl, id, title, entry, positives, mood, com)
                 setID(newID)
                 console.log("newID", newID)
             }}
@@ -122,18 +122,18 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
     );
 })
 
-const ViewJournal = ({journalUrl, journal, setChange}) => {
-    if (!journal) {
+const ViewReflection = ({reflectionUrl, reflection, setChange}) => {
+    if (!reflection) {
         return
     }
-    const date = journal.dateCreated
-    const title = journal.title
-    const mood = journal.mood.scale
-    const entry = journal.entry
-    const positives = journal.positives
-    const id = journal._id
+    const date = reflection.dateCreated
+    const title = reflection.title
+    const mood = reflection.mood.scale
+    const entry = reflection.entry
+    const positives = reflection.positives
+    const id = reflection._id
     return (
-      <div style={journalStyle}>
+      <div style={reflectionStyle}>
           <p>{date.toString()}</p>
           <p>{title}</p>
           <p>Mood: {mood}/10 </p>
@@ -151,7 +151,7 @@ const ViewJournal = ({journalUrl, journal, setChange}) => {
             title = "Delete"
             onClick={async (e) => {
                 e.preventDefault()
-                deleteJournal(journalUrl, id, setChange)
+                deleteReflection(reflectionUrl, id, setChange)
             }}
           > 
             Delete 
@@ -159,17 +159,17 @@ const ViewJournal = ({journalUrl, journal, setChange}) => {
       </div>)
 }
 
-const ViewJournalSimple = ({journalUrl, journal, setChange}) => {
-    if (!journal) {
+const ViewReflectionSimple = ({reflectionUrl, reflection, setChange}) => {
+    if (!reflection) {
         return
     }
-    const date = journal.dateCreated
-    const title = journal.title
-    const mood = journal.mood.scale
-    const id = journal._id
+    const date = reflection.dateCreated
+    const title = reflection.title
+    const mood = reflection.mood.scale
+    const id = reflection._id
     return (
       <div 
-        style={journalStyle}
+        style={reflectionStyle}
       >
           <p>{date.toString()}</p>
           <p>{title}</p>
@@ -186,7 +186,7 @@ const ViewJournalSimple = ({journalUrl, journal, setChange}) => {
             title = "Delete"
             onClick={async (e) => {
                 e.preventDefault()
-                deleteJournal(journalUrl, id, setChange)
+                deleteReflection(reflectionUrl, id, setChange)
             }}
           > 
             Delete 
@@ -194,36 +194,36 @@ const ViewJournalSimple = ({journalUrl, journal, setChange}) => {
       </div>)
 }
 
-const ViewJournals = ({journalUrl}) => {
-    const [journals, setJournals] = useState([])
+const ViewReflections = ({reflectionUrl}) => {
+    const [reflections, setReflections] = useState([])
     const [reqData, setReqData] = useState("")
     try {
-        //  get Journals from backend API
-        async function getJournals(url) {
-            const journals = await getObject(url)
-            // update journals array
-            setJournals(journals)
+        //  get Reflections from backend API
+        async function getReflections(url) {
+            const reflections = await getObject(url)
+            // update reflection array
+            setReflections(reflections)
         }
         useEffect(() => {
             console.log("getJournal...")
-            setJournals([])
-            getJournals(journalUrl);
-            console.log("new journals", journals)
+            setReflections([])
+            getReflections(reflectionUrl);
+            console.log("new journals", reflections)
         }, [reqData])
     } catch (error) {
         console.log(error)
     }
     return (<div>
-        Your Journals:
-        {journals.map((journal) => 
-          (<ViewJournalSimple
-            journal={journal} 
-            journalUrl={journalUrl} 
-            setJournals={setJournals}
+        Your Reflections:
+        {reflections.map((reflection) => 
+          (<ViewReflectionSimple
+            reflection={reflection} 
+            reflectionUrl={reflectionUrl} 
+            setReflections={setReflections}
             setChange={setReqData}
-            key={journal._id}
+            key={reflection._id}
           />))}
     </div>)
 }
 
-export {JournalInput, ViewJournals, ViewJournal};
+export {ReflectionInput, ViewReflections, ViewReflection};
