@@ -2,6 +2,8 @@ import React from 'react';
 import './App.css';
 import { MoodForm, ViewMoods } from './components/Mood'
 import { JournalInput, ViewJournals } from './components/Journal'
+import SignUpForm from './components/Signup'
+import LoginForm from './components/Login'
 import {ReflectionInput, ViewReflections} from './components/Reflection'
 import {ViewPet, ViewPetSimple} from './components/Pet'
 
@@ -12,6 +14,7 @@ function App() {
   return (
     <div className="App">
       <h1>My Secret Garden</h1>
+      <SignUpForm url={url+"user/register"}/>
       <ViewPetSimple petUrl={url+"pet"}/>
       <ViewPet petUrl={url+"pet"}/>
       <ViewReflections reflectionUrl={url+"reflection"}/>
