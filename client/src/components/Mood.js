@@ -86,7 +86,7 @@ const MoodInput = React.memo(({text1, scale, setScale, setCom, com}) => {
     const [com, setCom] = useState("")
     const [id, setID] = useState(null)*/
     return (
-      <div>
+      <div style={moodStyle}>
         <p>{text1} </p>
         <div style={moodSlider}>
           <Slider

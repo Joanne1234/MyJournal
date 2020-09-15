@@ -3,6 +3,7 @@ import './App.css';
 import { MoodForm, ViewMoods } from './components/Mood'
 import { JournalInput, ViewJournals } from './components/Journal'
 import {ReflectionInput, ViewReflections} from './components/Reflection'
+import {ViewPet, ViewPetSimple} from './components/Pet'
 
 const url = "http://localhost:5000/api/"
 
@@ -11,8 +12,10 @@ function App() {
   return (
     <div className="App">
       <h1>My Secret Garden</h1>
+      <ViewPetSimple petUrl={url+"pet"}/>
+      <ViewPet petUrl={url+"pet"}/>
+      <ViewReflections reflectionUrl={url+"reflection"}/>
       <ReflectionInput reflectionUrl={url+"reflection"}/>
-      <JournalInput reflectionUrl={url+"journal"}/>
       <MoodForm moodUrl={url+"moods"}/>
     </div>
   );
