@@ -175,6 +175,14 @@ const ViewJournalSimple = ({journalUrl, journal, setChange}) => {
           <p>{title}</p>
           <p>Mood: {mood}/10 </p>
           <button 
+            title = "View"
+            onClick={async (e) => {
+                e.preventDefault()
+            }}
+          > 
+            View Reflection
+          </button>
+          <button 
             title = "Edit"
             onClick={async (e) => {
                 e.preventDefault()

@@ -2,7 +2,22 @@ function getHeader() {
     return({
         Accept: "application/json",
         "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjVmMTkxMTUxMGViN2IzNTBiYzQzNzkiLCJpYXQiOjE2MDAwODczMTYsImV4cCI6MTYwMDA5MDAxNn0.bzEIln-bN7Rx4Vz489s11T3EEOSCmFxgqRTZ7UOetS0"
+        "auth-token": sessionStorage.getItem('authToken')
+    })
+}
+
+function getRefreshHeader() {
+    return({
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "refresh-token": sessionStorage.getItem('refreshToken')
+    })
+}
+
+function getRefreshParams() {
+    return({
+        "method": "GET",
+        "headers": getRefreshHeader()
     })
 }
 
@@ -45,5 +60,6 @@ export {
     getGETParams, 
     getPOSTParams, 
     getPATCHParams, 
-    getDELETEParams, 
+    getDELETEParams,
+    getRefreshParams
 }
