@@ -65,9 +65,8 @@ router.patch("/name", verify, async (req, res) => {
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
         const pet = currentUser.petInfo
-        console.log(pet)
         // get and change name of pet
-        const newName = req.body.post
+        const newName = req.body.post.name
         pet.name = newName
         const petInfo = getPetInfo(pet)
         currentUser.save()

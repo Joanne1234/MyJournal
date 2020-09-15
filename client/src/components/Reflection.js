@@ -14,14 +14,36 @@ const reflectionStyle = {
     outline: "thick solid lavender"
 }
 
-async function submitReflection(postUrl, id, title, entry, positives, scale, comments) {
-    console.log("patchjournal...", title, entry, positives, scale)
+async function submitReflection(postUrl, id, 
+    event, des, learnt, 
+    scaleB, scaleD, scaleA, 
+    comB, comD, comA, 
+    eva, ana, act, con) {
+    
+    console.log("patchjournal...", id, event, des, learnt, 
+    scaleB, scaleD, scaleA, 
+    comB, comD, comA, 
+    eva, ana, act, con)
+    var extended = false;
+    if (eva != "" || ana != "" || act != "" || con != con) {
+        extended = true
+    }
+
     const newEntryDetails = {
-        title: title,
-        entry: entry,
-        positives: positives,
-        mood: scale,
-        comments: comments
+        event: event,
+        description: des,
+        learnt: learnt,
+        moodBefore: scaleB,
+        moodDuring: scaleD,
+        moodAfter: scaleA,
+        commentsBefore: comB,
+        commentsDuring: comD,
+        commentsAfter: comA,
+        evaluation: eva,
+        analysis: ana,
+        actionPlan: act,
+        conclusion: con,
+        extended: extended
     }
     var newPost = null
     if (id != null) {
@@ -48,61 +70,129 @@ async function deleteReflection(url, id, setChange) {
     } 
     return []
 }
-const ReflectionInput = React.memo(({journalUrl, journal}) => {
-    const [title, setTitle] = useState("")
-    const [entry, setEntry] = useState("")
-    const [positives, setPositives] = useState("")
-    const [mood, setMood] = useState(0)
-    const [com, setCom] = useState("")
+const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
+    // set variables (reflection input)
+    const [event, setEvent] = useState("")
+    const [des, setDes] = useState("")
+    const [learnt, setLearnt] = useState("")
+    const [moodB, setMoodB] = useState(0)
+    const [moodD, setMoodD] = useState(0)
+    const [moodA, setMoodA] = useState(0)
+    const [comB, setComB] = useState("")
+    const [comD, setComD] = useState("")
+    const [comA, setComA] = useState("")
+    const [ana, setAna] = useState("")
+    const [con, setCon] = useState("")
+    const [eva, setEva] = useState("")
+    const [act, setAct] = useState("")
     const [id, setID] = useState(null)
-    if (journal) {
-        setTitle(journal.title)
-        setEntry(journal.entry)
-        setMood(journal.mood.scale)
-        setCom(journal.mood.comments)
-        setPositives(journal.positives)
+    if (reflection) {
+        setEvent(reflection.event)
+        setDes(reflection.description)
+        setLearnt(reflection.learnt)
+        setMoodB(reflection.moodBefore.scale)
+        setMoodD(reflection.moodDuring.scale)
+        setMoodA(reflection.moodAfter.scale)
+        setComB(reflection.moodBefore.comments)
+        setComD(reflection.moodDuring.comments)
+        setComA(reflection.moodAfter.comments)
+        setEva(reflection.evaluation)
+        setCon(reflection.conclusion)
+        setAna(reflection.analysis)
+        setAct(reflection.actionPlan)
     }
     return (
       <div style={reflectionStyle}>
+        <p>Write a reflection!!!</p>
         <form>
-          <p>Entry Title: 
+          <p>Give it a title: 
           <input 
             type="text"
-            value={title}
+            value={event}
             onChange={(e) => {
-                setTitle(e.target.value)
+                setEvent(e.target.value)
             }}
           />
           </p>
-          <p>Your Entry: </p>
+          <p>What happened? </p>
           <input 
             type="text"
-            value={entry}
+            value={des}
             onChange={(e) => {
-                setEntry(e.target.value)
+                setDes(e.target.value)
             }}
           />
-          <p>What were the positives? </p>
+          <p>Action - What did you do in response: </p>
           <input 
             type="text"
-            value={positives}
+            value={ana}
             onChange={(e) => {
-                setPositives(e.target.value)
+                setAna(e.target.value)
+            }}
+          />
+          <p>Lessons Learnt: </p>
+          <input 
+            type="text"
+            value={learnt}
+            onChange={(e) => {
+                setLearnt(e.target.value)
             }}
           />
           <MoodInput 
-          text1="How did you feel" 
-          scale={mood}
-          setScale={setMood}
-          setCom={setCom}
-          com={com}
+          text1="How did you feel before the event?" 
+          scale={moodB}
+          setScale={setMoodB}
+          setCom={setComB}
+          com={comB}
           />
-          <p/>
+          <MoodInput 
+          text1="How did you feel during the event?" 
+          scale={moodD}
+          setScale={setMoodD}
+          setCom={setComD}
+          com={comD}
+          />
+          <MoodInput 
+          text1="How did you feel after the event?" 
+          scale={moodA}
+          setScale={setMoodA}
+          setCom={setComA}
+          com={comA}
+          />
+          <p>Did you think you did a good job? </p>
+          <input 
+            type="text"
+            value={eva}
+            onChange={(e) => {
+                setEva(e.target.value)
+            }}
+          />
+          <p>What would you do if it happened again? </p>
+          <input 
+            type="text"
+            value={act}
+            onChange={(e) => {
+                setAct(e.target.value)
+            }}
+          />
+          <p>Overall how did you think it went: </p>
+          <input 
+            type="text"
+            value={con}
+            onChange={(e) => {
+                setCon(e.target.value)
+            }}
+          />
           <button 
             title = "Save"
             onClick={async (e) => {
                 e.preventDefault()
-                const newID = await submitReflection(journalUrl, id, title, entry, positives, mood, com)
+                const newID = await submitReflection(reflectionUrl, id, 
+                    event, des, learnt, 
+                    moodB, moodD, moodA, 
+                    comB, comD, comA,
+                    eva, ana, act, con
+                    )
                 setID(newID)
                 console.log("newID", newID)
             }}
@@ -127,18 +217,36 @@ const ViewReflection = ({reflectionUrl, reflection, setChange}) => {
         return
     }
     const date = reflection.dateCreated
-    const title = reflection.title
-    const mood = reflection.mood.scale
-    const entry = reflection.entry
-    const positives = reflection.positives
+    const event = reflection.event
+    const des = reflection.des
+    const learnt = reflection.learnt
+    const moodB = reflection.feelings.moodBefore.scale
+    const moodD = reflection.feelings.moodDuring.scale
+    const moodA = reflection.feelings.moodAfter.scale
+    const comB = reflection.feelings.moodBefore.comments
+    const comD = reflection.feelings.moodDuring.comments
+    const comA = reflection.feelings.moodAfter.comments
+    const ana = reflection.analysis
+    const eva = reflection.evaluation
+    const con = reflection.conclusion
+    const act = reflection.actionPlan
     const id = reflection._id
     return (
       <div style={reflectionStyle}>
           <p>{date.toString()}</p>
-          <p>{title}</p>
-          <p>Mood: {mood}/10 </p>
-          <p>Entry: {entry}</p>
-          <p>Positives: {positives}</p>
+          <p>{event}</p>
+          <p>{des}</p>
+          <p>Actions taken: {ana}</p>
+          <p>Lessons Learnt: {learnt}</p>
+          <p>Mood Before: {moodB}/10</p>
+          <p>{comB}</p>
+          <p>Mood During: {moodD}/10</p>
+          <p>{comD}</p>
+          <p>Mood After: {moodA}/10</p>
+          <p>{comA}</p>
+          <p>Evaluation: {eva}</p>
+          <p>Action Plan for next time: {act}</p>
+          <p>Conclusion: {con}</p>
           <button 
             title = "Edit"
             onClick={async (e) => {
@@ -164,16 +272,22 @@ const ViewReflectionSimple = ({reflectionUrl, reflection, setChange}) => {
         return
     }
     const date = reflection.dateCreated
-    const title = reflection.title
-    const mood = reflection.mood.scale
+    const event = reflection.event
     const id = reflection._id
     return (
       <div 
         style={reflectionStyle}
       >
           <p>{date.toString()}</p>
-          <p>{title}</p>
-          <p>Mood: {mood}/10 </p>
+          <p>{event}</p>
+          <button 
+            title = "View"
+            onClick={async (e) => {
+                e.preventDefault()
+            }}
+          > 
+            View Reflection
+          </button>
           <button 
             title = "Edit"
             onClick={async (e) => {
@@ -205,10 +319,10 @@ const ViewReflections = ({reflectionUrl}) => {
             setReflections(reflections)
         }
         useEffect(() => {
-            console.log("getJournal...")
+            console.log("get Reflections...")
             setReflections([])
             getReflections(reflectionUrl);
-            console.log("new journals", reflections)
+            console.log("new refs", reflections)
         }, [reqData])
     } catch (error) {
         console.log(error)
@@ -216,7 +330,7 @@ const ViewReflections = ({reflectionUrl}) => {
     return (<div>
         Your Reflections:
         {reflections.map((reflection) => 
-          (<ViewReflectionSimple
+          (<ViewReflection
             reflection={reflection} 
             reflectionUrl={reflectionUrl} 
             setReflections={setReflections}

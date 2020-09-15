@@ -2,7 +2,22 @@ function getHeader() {
     return({
         Accept: "application/json",
         "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjVmMTkxMTUxMGViN2IzNTBiYzQzNzkiLCJpYXQiOjE2MDAwODczMTYsImV4cCI6MTYwMDA5MDAxNn0.bzEIln-bN7Rx4Vz489s11T3EEOSCmFxgqRTZ7UOetS0"
+        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjYwOThmZmU1Zjg4ZWU2YmMzNjc1NjAiLCJpYXQiOjE2MDAxNzU0MDMsImV4cCI6MTYwMDE3ODEwM30.YKzmc5nE1XxdvuN93Z-nYDvntMgmXXJ82yf2badlC34"
+    })
+}
+
+function getRefreshHeader() {
+    return({
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "refresh-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjVmMTkxMTUxMGViN2IzNTBiYzQzNzkiLCJpYXQiOjE2MDAxNzEyNTksImV4cCI6MTYwMDE3Mzk1OX0.y2GuK3jI8RoQGkqy9GuGm7KUij6ilnKOaxLdFlppt_8"
+    })
+}
+
+function getRefreshParams() {
+    return({
+        "method": "GET",
+        "headers": getRefreshHeader()
     })
 }
 
@@ -45,5 +60,6 @@ export {
     getGETParams, 
     getPOSTParams, 
     getPATCHParams, 
-    getDELETEParams, 
+    getDELETEParams,
+    getRefreshParams
 }

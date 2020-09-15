@@ -11,8 +11,8 @@ function App() {
   return (
     <div className="App">
       <h1>My Secret Garden</h1>
+      <ViewReflections reflectionUrl={url+"reflection"}/>
       <ReflectionInput reflectionUrl={url+"reflection"}/>
-      <JournalInput reflectionUrl={url+"journal"}/>
       <MoodForm moodUrl={url+"moods"}/>
     </div>
   );
