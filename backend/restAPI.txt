@@ -1,0 +1,853 @@
+swagger: '2.0'
+info:
+  description: |
+    This is a basic rest api of MySecretGarden.
+  version: 1.0.0
+  title: My Secret Garden
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+# host: petstore.swagger.io
+# basePath: /v2
+tags:
+- name: Pet
+  description: Everything about your pet
+- name: Journal
+  description: Access Journal entries
+- name: Reflection
+  description: Access Reflection entries
+- name: Mood
+  description: Access Mood entries
+- name: User
+  description: Operations about user
+# schemes:
+# - http
+paths:
+  /journal:
+    post:
+      tags:
+      - Journal
+      summary: Add a journal entry
+      operationId: addJournal
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: body
+        name: body
+        description: Journal entry details
+        required: true
+        schema:
+          $ref: '#/definitions/Journal'
+      responses:
+        200:
+          description: new journal entry
+          schema: 
+            $ref: '#/definitions/JournalInfo'
+        403:
+          description: Invalid Token
+      security:
+      - msg_auth:
+        - write:pets
+        - read:pets
+    get:
+      tags:
+      - Journal
+      summary: Get all journal entries
+      operationId: getJournalEntries
+      consumes:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Success. All journal entries given
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/JournalInfo'
+        403:
+          description: Invalid Token
+      security:
+      - msg_auth:
+        - write:pets
+        - read:pets
+  /journal/{journalID}:
+    get:
+      tags:
+      - Journal
+      summary: Finds Journal by ID
+      operationId: findJournalByID
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: path
+        name: journalID
+        description: ID of journal
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success. Journal entry returned
+          schema:
+            $ref: '#/definitions/JournalInfo'
+        403:
+          description: Invalid Token
+      security:
+      - msg_auth:
+        - write:pets
+        - read:pets
+    delete:
+      tags:
+      - Journal
+      summary: Delete Journal by ID
+      operationId: deleteJournalByID
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: path
+        name: journalID
+        description: ID of journal
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation. All other journal entries are returned
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/JournalInfo'
+        403:
+          description: Invalid Token
+      security:
+      - msg_auth:
+        - write:pets
+        - read:pets
+    patch:
+      tags:
+      - Journal
+      summary: Update Journal by ID
+      operationId: updateJournalByID
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: path
+        name: journalID
+        description: ID of journal
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation.
+          schema:
+            $ref: '#/definitions/JournalInfo'
+        403:
+          description: Invalid Token
+      security:
+      - msg_auth:
+        - write:pets
+        - read:pets
+  /reflection:
+    post:
+      tags:
+      - Reflection
+      summary: Add a reflection entry
+      operationId: addReflection
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: body
+        name: body
+        description: Reflection entry details
+        required: true
+        schema:
+          $ref: '#/definitions/Reflection'
+      responses:
+        200:
+          description: Success. Reflection entry shown
+          schema:
+            $ref: '#/definitions/ReflectionInfo'
+        403:
+          description: Invalid Token
+      security:
+      - msg_auth:
+        - write:pets
+        - read:pets
+    get:
+      tags:
+      - Reflection
+      summary: Get all reflection entries
+      operationId: getReflectionEntries
+      consumes:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Success. All reflection entries written by user
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ReflectionInfo'
+        403:
+          description: Invalid Token
+      security:
+      - msg_auth:
+        - write:pets
+        - read:pets
+  /reflection/{reflectionID}:
+    get:
+      tags:
+      - Reflection
+      summary: Finds Reflection by ID
+      operationId: findReflectionByID
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: path
+        name: reflectionID
+        description: ID of reflection
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success. Reflection
+          schema:
+            $ref: '#/definitions/ReflectionInfo'
+        403:
+          description: Invalid Token
+      security:
+      - msg_auth:
+        - write:pets
+        - read:pets
+    delete:
+      tags:
+      - Reflection
+      summary: Delete reflection by ID
+      operationId: deleteReflectionByID
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: path
+        name: reflectionID
+        description: ID of reflection
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success. All other reflection entries are returned
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ReflectionInfo'
+        403:
+          description: Invalid Token
+      security:
+      - msg_auth:
+        - write:pets
+        - read:pets
+    patch:
+      tags:
+      - Reflection
+      summary: Update Reflection by ID
+      operationId: updateReflectionByID
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: path
+        name: reflectionID
+        description: ID of Reflection
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success. Updated reflection
+          schema:
+            $ref: '#/definitions/ReflectionInfo'
+        403:
+          description: Invalid Token
+      security:
+      - msg_auth:
+        - write:pets
+        - read:pets
+  /user:
+    get:
+      tags:
+      - User
+      summary: Get user details
+      description: This can only be done by the logged in user.
+      operationId: getUser
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/UserInfo'
+        403:
+          description: Invalid Token
+  /user/register:
+    post:
+      tags:
+      - User
+      summary: Creates a user account
+      operationId: createUser
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: User details
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        200:
+          description: successful operation
+          headers:
+            auth-token:
+              type: string
+              description: authentication token
+            refresh-token:
+              type: string
+              description: refresh token
+        403:
+          description: Invalid Token
+  /user/login:
+    post:
+      tags:
+      - User
+      summary: Logs user into the system
+      operationId: loginUser
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: user information
+        description: The user's email and password for login
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        200:
+          description: successful operation
+          headers:
+            auth-token:
+              type: string
+              description: authentication token
+            refresh-token:
+              type: string
+              description: refresh token
+        400:
+          description: Invalid email/password supplied
+  /user/logout:
+    post:
+      tags:
+      - User
+      summary: Logs out current logged in user session
+      operationId: logoutUser
+      produces:
+      - application/json
+      parameters: 
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      responses:
+        200:
+          description: successful operation
+        403:
+          description: Invalid Token
+  /user/token:
+    get:
+      tags:
+      - User
+      summary: Get new authentication token
+      operationId: getNewToken
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: refresh-token
+        description: Refresh token provided
+        required: true
+      responses:
+        200:
+          description: Success. New auth-token provided
+        403:
+          description: Invalid token
+  /user/details:
+    patch:
+      tags:
+      - User
+      summary: Update user details (name, password)
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: body
+        name: body
+        description: Updated user object
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        200:
+          description: Success. Updated User information
+          schema:
+            $ref: '#/definitions/UserInfo'
+        400:
+          description: Invalid user supplied
+        403:
+          description: Invalid Token
+        404:
+          description: User not found
+  /pet:
+    get:
+      tags:
+      - Pet
+      summary: Get pet details
+      description: This can only be done by the logged in user.
+      operationId: getPetInfo
+      parameters: 
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Pet'
+        403:
+          description: Invalid Token
+    post:
+      tags:
+      - Pet
+      summary: Feed pet
+      description: This can only be done by the logged in user.
+      operationId: feedPet
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: body
+        name: body
+        description: Food to feed pet
+        required: true
+        schema:
+          $ref: '#/definitions/PetFeed'
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Pet'
+        403:
+          description: Invalid Token
+  /pet/revive:
+    post:
+      tags:
+      - Pet
+      summary: Revive pet if dead
+      description: This can only be done by the logged in user.
+      operationId: revivePet
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: body
+        name: body
+        description: Revive type
+        required: true
+        schema:
+          $ref: '#/definitions/PetRevive'
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Pet'
+        403:
+          description: Invalid Token
+  /mood:
+    get:
+      tags:
+      - Mood
+      summary: Get all mood entries
+      description: This can only be done by the logged in user.
+      operationId: getMoods
+      parameters: 
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Mood'
+        403:
+          description: Invalid Token
+    post:
+      tags:
+      - Mood
+      summary: Create new mood entry
+      description: This can only be done by the logged in user.
+      operationId: createMoodPost
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: body
+        name: body
+        description: mood entry
+        required: true
+        schema:
+          $ref: '#/definitions/MoodEntry'
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Mood'
+        403:
+          description: Invalid Token
+  /mood/{moodID}:
+    get:
+      tags:
+      - Mood
+      summary: Get a specific mood entry
+      description: This can only be done by the logged in user.
+      operationId: getMoodByID
+      parameters: 
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: path
+        name: moodID
+        description: ID of mood
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Mood'
+        403:
+          description: Invalid Token
+    patch:
+      tags:
+      - Mood
+      summary: Update a mood entry
+      description: This can only be done by the logged in user.
+      operationId: updateMoodPost
+      parameters:
+      - in: header
+        type: string
+        name: auth-token
+        description: Authentication token provided
+        required: true
+      - in: path
+        name: moodID
+        description: ID of mood
+        required: true
+        type: string
+      - in: body
+        name: body
+        description: mood entry
+        required: true
+        schema:
+          $ref: '#/definitions/MoodEntry'
+      
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Mood'
+        403:
+          description: Invalid Token
+securityDefinitions:
+  msg_auth:
+    type: oauth2
+    authorizationUrl: http://petstore.swagger.io/oauth/auth
+    flow: implicit
+    scopes:
+      write:pets: modify pets in your account
+      read:pets: read your pets
+definitions:
+  Mood:
+    type: object
+    properties:
+      scale:
+        type: integer
+      _id: 
+        type: string
+      points:
+        type: integer
+      parent:
+        type: string
+  MoodEntry:
+    type: object
+    properties:
+      scale:
+        type: integer
+  Reflection:
+    type: object
+    required:
+    - event
+    - description
+    - learnt
+    - feelings
+    properties:
+      _id:
+        type: string
+      event:
+        type: string
+      description:
+        type: string
+      learnt:
+        type: string
+      feelings:
+        type: object
+        properties:
+          moodBefore:
+            type: integer
+          moodDuring:
+            type: integer
+          moodAfter:
+            type: integer
+      evaluation:
+        type: string
+      analysis:
+        type: string
+      conclusion:
+        type: string
+      actionPlan: 
+        type: string
+  ReflectionInfo:
+    type: object
+    properties:
+      _id:
+        type: string
+      event:
+        type: string
+      description:
+        type: string
+      learnt:
+        type: string
+      feelings:
+        type: object
+        properties:
+          moodBefore:
+            $ref: '#/definitions/Mood'
+          moodDuring:
+            $ref: '#/definitions/Mood'
+          moodAfter:
+            $ref: '#/definitions/Mood'
+      evaluation:
+        type: string
+      analysis:
+        type: string
+      conclusion:
+        type: string
+      actionPlan: 
+        type: string
+  User:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+  UserInfo:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      journalEntries:
+        type: array
+        items:
+          $ref: '#/definitions/JournalInfo'
+      reflectionEntries:
+        type: array
+        items:
+          $ref: '#/definitions/ReflectionInfo'
+      mood:
+        type: array
+        items:
+          $ref: '#/definitions/Mood'
+      misc:
+        type: array
+        items:
+          $ref: '#/definitions/MISC'
+      pet:
+        $ref: '#/definitions/Pet'
+      remainingPoints:
+        type: integer
+  Journal:
+    type: object
+    properties:
+      title:
+        type: string
+      entry:
+        type: string
+      positives:
+        type: string
+      mood: 
+        type: integer
+  JournalInfo:
+    type: object
+    properties:
+      _id:
+        type: string
+      title:
+        type: string
+      entry:
+        type: string
+      positives:
+        type: string
+      mood:
+        $ref: '#/definitions/Mood'
+      points: 
+        type: integer
+      dateCreated:
+        type: string
+  Pet:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Rocky
+      health:
+        type: integer
+      level:
+        type: integer
+      overallFoodIntake:
+        type: integer
+  PetRevive:
+    type: object
+    properties:
+      revive:
+        type: boolean
+  PetFeed:
+    type: object
+    properties:
+      food:
+        type: integer
+  MISC:
+    type: object
+    properties:
+      _id: 
+        type: string
+      title:
+        type: string
+      points:
+        type: integer
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /MySecretGarden/MySecretGarden/1.0.0
+schemes:
+ - https
+ - http

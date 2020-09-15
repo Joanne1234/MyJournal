@@ -7,7 +7,7 @@ const myValidSchemas = require("../validation");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { verify, verifyRefresh} = require("./verify");
-const { getTotalPoints, getRemainingPoints, getUserInfo } = require('./helper');
+const { getUserInfo } = require('./helper');
 const PetInfo = require('../models/PetInfo');
 
 const accessTokenLifetime = '45m'
@@ -119,7 +119,7 @@ router.patch("/details", verify, async (req, res) => {
     }
 })
 
-router.post("/token", verifyRefresh, async (req, res) => {
+router.get("/token", verifyRefresh, async (req, res) => {
     const authToken = jwt.sign({ _id: req.user._id }, 
         process.env.ACCESS_TOKEN_SECRET, 
         {expiresIn: accessTokenLifetime});
