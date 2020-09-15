@@ -61,6 +61,22 @@ router.post("/", verify, async (req, res) => {
     }
 });
 
+router.patch("/name", verify, async (req, res) => {
+    try {
+        const currentUser = await User.findOne({ _id: req.user._id });
+        const pet = currentUser.petInfo
+        console.log(pet)
+        // get and change name of pet
+        const newName = req.body.post
+        pet.name = newName
+        const petInfo = getPetInfo(pet)
+        currentUser.save()
+        res.json(petInfo);
+    } catch(err) {
+        res.json({message: err});
+    }
+})
+
 // revive pet
 router.post("/revive", verify, async (req, res) => {
     try {

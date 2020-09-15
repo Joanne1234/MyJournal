@@ -11,7 +11,7 @@ const moodStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid lightblue"
+    outline: "thick solid paleturquoise"
 }
 
 const moodSlider = {
