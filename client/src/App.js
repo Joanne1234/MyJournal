@@ -2,7 +2,8 @@ import React from 'react';
 import './App.css';
 import { MoodForm, ViewMoods } from './components/Mood'
 import { JournalInput, ViewJournals } from './components/Journal'
-import {ReflectionInput, ViewReflections} from './components/Reflection'
+import SignUpForm from './components/Signup'
+import LoginForm from './components/Login'
 
 const url = "http://localhost:5000/api/"
 
@@ -11,9 +12,7 @@ function App() {
   return (
     <div className="App">
       <h1>My Secret Garden</h1>
-      <ReflectionInput reflectionUrl={url+"reflection"}/>
-      <JournalInput reflectionUrl={url+"journal"}/>
-      <MoodForm moodUrl={url+"moods"}/>
+      <SignUpForm url={url+"user/register"}/>
     </div>
   );
 }
