@@ -67,6 +67,7 @@ router.patch("/name", verify, async (req, res) => {
         const pet = currentUser.petInfo
         // get and change name of pet
         const newName = req.body.post.name
+        console.log(newName)
         pet.name = newName
         const petInfo = getPetInfo(pet)
         currentUser.save()
