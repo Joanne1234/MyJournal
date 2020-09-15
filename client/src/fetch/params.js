@@ -6,6 +6,21 @@ function getHeader() {
     })
 }
 
+function getRefreshHeader() {
+    return({
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "refresh-token": sessionStorage.getItem('refreshToken')
+    })
+}
+
+function getRefreshParams() {
+    return({
+        "method": "GET",
+        "headers": getRefreshHeader()
+    })
+}
+
 function getGETParams() {
     return({
         "method": "GET",
@@ -45,5 +60,6 @@ export {
     getGETParams, 
     getPOSTParams, 
     getPATCHParams, 
-    getDELETEParams, 
+    getDELETEParams,
+    getRefreshParams
 }
