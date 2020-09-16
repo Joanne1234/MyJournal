@@ -6,6 +6,7 @@ import {
     deleteObject
 } from '../fetch/generalFetch';
 import { MoodInput } from './Mood';
+import ErrorMessage from './Error'
 
 const journalStyle = {
     alignContent: 'center',
@@ -37,11 +38,11 @@ async function submitJournal(postUrl, id, title, entry, positives, scale, commen
     } else {
         newPost = await makeNewPost(postUrl, newEntryDetails)
     }
-    if (newPost) {
-        console.log(newPost)
-        id = newPost._id
-        return id
+    if (newPost.msg) {
+        return newPost
     }
+    id = newPost._id
+    return id
 }
 async function deleteJournal(url, id, setChange) {
     console.log("deletejournal...", url, id)
@@ -62,6 +63,8 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
     const [mood, setMood] = useState(0)
     const [com, setCom] = useState("")
     const [id, setID] = useState(null)
+    const [displayError, setDisplayError] = useState("none")
+    const [error, setError] = useState("")
     if (journal) {
         setTitle(journal.title)
         setEntry(journal.entry)
@@ -106,11 +109,24 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
           com={com}
           />
           <p/>
+          <ErrorMessage 
+            display={displayError} 
+            msg={error}
+          />
           <button 
             title = "Save"
             onClick={async (e) => {
                 e.preventDefault()
                 const newID = await submitJournal(journalUrl, id, title, entry, positives, mood, com)
+                if (newID.msg) {
+                    // show error message
+                    setDisplayError("block")
+                    setError(newID.msg)
+                    return
+                }
+                // ensure no error msg
+                setDisplayError("none")
+                setError("")
                 setID(newID)
                 console.log("newID", newID)
             }}

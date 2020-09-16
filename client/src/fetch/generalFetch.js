@@ -15,6 +15,7 @@ async function makeNewPost(url, post) {
         return res
     } catch (err) {
         console.log("POST Error:", err);
+        return err
     }
 }
 

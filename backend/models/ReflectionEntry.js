@@ -29,7 +29,7 @@ const ReflectionEntrySchema = new mongoose.Schema({
         max: 1024
     },
 
-    analysis: {
+    actions: {
         type: String,
         required: false,
         min: 2,

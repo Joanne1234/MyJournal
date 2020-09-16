@@ -5,7 +5,8 @@ const JournalEntry = require("../models/JournalEntry");
 const User = require("../models/User");
 const functions = require('./helper');
 const Mood = require("../models/Mood");
-const { getObject, getJournalInfo } = require("./helper");
+const { getJournalInfo } = require("./helper");
+const myValidSchemas = require("../validation");
 
 // On journal entry page
 router.get("/",  verify, async (req, res) => {
@@ -36,6 +37,10 @@ router.get('/:journalId', verify, async (req, res) => {
 
 // add new journal entry
 router.post("/", verify, async (req, res) => {
+    // basic field validation
+    const { error } = myValidSchemas.JournalValidation.validate(req.body.post);
+    if (error) return res.status(400).send({msg: error.details[0].message});
+    
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
         // create new journal entry
@@ -86,6 +91,10 @@ router.delete('/:journalId', verify, async (req, res) => {
 
 // update journal
 router.patch('/:journalId', verify, async (req, res) => {
+    // basic field validation
+    const { error } = myValidSchemas.JournalValidation.validate(req.body.post);
+    if (error) return res.status(400).send({msg: error.details[0].message});
+    
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
         const journals = currentUser.journalEntries

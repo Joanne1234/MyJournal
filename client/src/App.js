@@ -30,6 +30,7 @@ function App() {
       <h1>My Secret Garden</h1>
       <SignUpForm url={url+"user/signup"}/>
       <LoginForm url={url+"user/login"}/>
+      <ReflectionInput reflectionUrl={url+"reflection"}/>
     </div>
   );
 }

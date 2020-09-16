@@ -3,18 +3,19 @@ import React from 'react'
 const errorStyle = (display) => {
     return {
         color: 'red',
-        display: display
+        display: display,
+        fontSize: "smaller",
     }
 }
 
-const InvalidLogInDetails = ({display}) => {
+const ErrorMessage = ({msg, display}) => {
+    msg = msg.replace(/\"/g, "")
     return (
       <div>
-        <p style={errorStyle(display)}>Invalid username/password</p>
+        <p style={errorStyle(display)}>{msg}</p>
       </div>
     )
 }
 
-export {
-    InvalidLogInDetails
-}
+export default ErrorMessage
+

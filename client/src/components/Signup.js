@@ -3,7 +3,7 @@ import 'rc-slider/assets/index.css';
 import { 
     makeNewPost
 } from '../fetch/generalFetch';
-import {InvalidLogInDetails} from './Error'
+import ErrorMessage from './Error'
 
 
 const signUpStyle = {
@@ -12,6 +12,11 @@ const signUpStyle = {
     padding: 5,
     outline: "thick solid orange",
     alignSelf: 'center',
+}
+
+const reqStyle = {
+    fontSize: "smaller",
+    fontWeight: "lighter",
 }
 
 async function submitSignUp(postUrl, name, email, password) {
@@ -30,6 +35,7 @@ const SignUpForm= React.memo(({url}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [displayError, setDisplayError] = useState("none")
+    const [error, setError] = useState("")
     return (
       <div style={signUpStyle}>
         <form>
@@ -57,15 +63,20 @@ const SignUpForm= React.memo(({url}) => {
             }}
           />
           </p>
-          <InvalidLogInDetails display={displayError}/>
+          <p style={reqStyle}>Must be at least 6 characters long</p>
+          <ErrorMessage 
+            display={displayError} 
+            msg={error}
+          />
           <button 
             onClick={async (e) => {
                 e.preventDefault()
                 const user = await submitSignUp(url,name,email,password)
                 console.log("user", user)
                 // invalid login details
-                if (!user) {
+                if (user.msg) {
                   setDisplayError("block")
+                  setError(user.msg)
                   return
                 }
                 setDisplayError("none")
