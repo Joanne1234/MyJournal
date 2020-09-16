@@ -119,16 +119,6 @@ router.patch("/details", verify, async (req, res) => {
     }
 })
 
-router.get("/token", verifyRefresh, async (req, res) => {
-    const authToken = jwt.sign({ _id: req.user._id }, 
-        process.env.ACCESS_TOKEN_SECRET, 
-        {expiresIn: accessTokenLifetime});
-    return res
-        .status(200)
-        .set("auth-token", authToken)
-        .send({authToken});
-})
-
 router.post("/logout", verify, async (req, res) => {
     
     // remove all refresh tokens from user from list

@@ -6,8 +6,10 @@ import LoginForm from './components/Login'
 import {ReflectionInput, ViewReflections} from './components/Reflection'
 import {ViewPet, ViewPetSimple} from './components/Pet'
 import background from './assets/StartingBackground.png';
-import egg from './assets/egg.png'
-const url = "http://localhost:5000/api/"
+import url from './components/url'
+import Logout from './components/Logout'
+import ReAuth from './components/ReAuth'
+
 const style = {  
   backgroundImage: "url(" + background + ")",
   backgroundPosition: 'center',
@@ -22,14 +24,12 @@ const style = {
   opacity: 0.8,
 }
 function App() {
-  console.log(egg)
   return (
     <div 
       style={style}
     >
       <h1>My Secret Garden</h1>
-      <SignUpForm url={url+"user/signup"}/>
-      <LoginForm url={url+"user/login"}/>
+      <Logout/>
       <ReflectionInput reflectionUrl={url+"reflection"}/>
     </div>
   );
