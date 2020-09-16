@@ -11,8 +11,9 @@ const journalStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid palegreen",
-    backgroundColor: "palegreen"
+    outline: "thick solid white",
+    backgroundColor: "palegreen",
+    overflow: 'scroll',
 }
 
 const textBoxStyle = {
@@ -187,7 +188,7 @@ const ViewJournalSimple = ({journalUrl, journal, setChange}) => {
                 e.preventDefault()
             }}
           > 
-            View Reflection
+            View Journal
           </button>
           <button 
             title = "Edit"
@@ -228,10 +229,10 @@ const ViewJournals = ({journalUrl}) => {
     } catch (error) {
         console.log(error)
     }
-    return (<div>
+    return (<div style={journalStyle}>
         Your Journals:
         {journals.map((journal) => 
-          (<ViewJournalSimple
+          (<ViewJournal
             journal={journal} 
             journalUrl={journalUrl} 
             setJournals={setJournals}

@@ -28,7 +28,8 @@ function App() {
       style={style}
     >
       <h1>My Secret Garden</h1>
-      <JournalInput reflectionUrl={url+"journal"}/>
+      <SignUpForm url={url+"user/signup"}/>
+      <LoginForm url={url+"user/login"}/>
     </div>
   );
 }

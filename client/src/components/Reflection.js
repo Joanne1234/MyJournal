@@ -11,7 +11,7 @@ const reflectionStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid lavender",
+    outline: "thick solid white",
     overflow: 'scroll',
     backgroundColor: "lavender"
 }
@@ -337,10 +337,10 @@ const ViewReflections = ({reflectionUrl}) => {
     } catch (error) {
         console.log(error)
     }
-    return (<div>
+    return (<div style={reflectionStyle}>
         Your Reflections:
         {reflections.map((reflection) => 
-          (<ViewReflectionSimple
+          (<ViewReflection
             reflection={reflection} 
             reflectionUrl={reflectionUrl} 
             setReflections={setReflections}

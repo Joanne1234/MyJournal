@@ -3,6 +3,7 @@ import 'rc-slider/assets/index.css';
 import { 
     makeNewPost
 } from '../fetch/generalFetch';
+import {InvalidLogInDetails} from './Error'
 
 const loginStyle = {
     alignContent: 'center',
@@ -25,6 +26,7 @@ async function submitLogin(postUrl, email, password) {
 const LoginForm= React.memo(({url}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [displayError, setDisplayError] = useState("none")
     return (
       <div style={loginStyle}>
         <form>
@@ -44,12 +46,17 @@ const LoginForm= React.memo(({url}) => {
             }}
           />
           </p>
-          
+          <InvalidLogInDetails display={displayError}/>
           <button 
             onClick={async (e) => {
                 e.preventDefault()
                 const user = await submitLogin(url,email,password)
-                console.log("user", user)
+                // invalid login details
+                if (!user) {
+                  setDisplayError("block")
+                  return
+                }
+                setDisplayError("none")
                 sessionStorage.setItem('authToken', user["authToken"])
                 sessionStorage.setItem('refreshToken', user["refreshToken"])
             }}
