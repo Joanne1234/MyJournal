@@ -4,7 +4,7 @@ const {verify} = require("./verify");
 const User = require("../models/User");
 const functions = require('./helper');
 const Mood = require("../models/Mood");
-
+const myValidSchemas = require("../validation");
 // On mood tracking page
 router.get("/",  verify, async (req, res) => {
     // get all moods from all journal entries, reflections etc.
@@ -32,6 +32,10 @@ router.get('/:moodId', verify, async (req, res) => {
 
 // add new mood entry
 router.post("/", verify, async (req, res) => {
+    // basic field validation
+    const { error } = myValidSchemas.MoodValidation.validate(req.body.post);
+    if (error) return res.status(400).send({msg: error.details[0].message});
+    
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
         // create new mood entry
@@ -50,7 +54,11 @@ router.post("/", verify, async (req, res) => {
 
 // update mood
 router.patch('/:moodId', verify, async (req, res) => {
+    // basic field validation
+    const { error } = myValidSchemas.Validation.validate(req.body.post);
+    if (error) return res.status(400).send({msg: error.details[0].message});
     try {
+        // find mood instance
         const currentUser = await User.findOne({ _id: req.user._id });
         const moods = currentUser.mood
         const specificMood = functions.getObject(req.params.moodId, moods)

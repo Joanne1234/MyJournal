@@ -6,6 +6,7 @@ const User = require("../models/User");
 const functions = require('./helper');
 const Mood = require("../models/Mood");
 const { getReflectionInfo } = require("./helper");
+const myValidSchemas = require("../validation");
 
 // On reflection page
 router.get("/",  verify, async (req, res) => {
@@ -34,6 +35,10 @@ router.get('/:reflectionId', verify, async (req, res) => {
 
 // add new reflection entry
 router.post("/", verify, async (req, res) => {
+    // basic field validation
+    const { error } = myValidSchemas.ReflectionValidation.validate(req.body.post);
+    if (error) return res.status(400).send({msg: error.details[0].message});
+    
     try {
         console.log("finding user:", req.user._id)
         const currentUser = await User.findOne({ _id: req.user._id });
@@ -79,7 +84,7 @@ router.post("/", verify, async (req, res) => {
         if (req.body.post.extended === true) {
             newReflection.evaluation = true
             newReflection.evaluation = req.body.post.evaluation
-            newReflection.analysis = req.body.post.analysis
+            newReflection.actions = req.body.post.actions
             newReflection.conclusion = req.body.post.conclusion
             newReflection.actionPlan = req.body.post.actionPlan
             newReflection.points = newReflection.points*2
@@ -129,6 +134,10 @@ router.delete('/:reflectionId', verify, async (req, res) => {
 
 // update reflection
 router.patch('/:reflectionId', verify, async (req, res) => {
+    // basic field validation
+    const { error } = myValidSchemas.ReflectionValidation.validate(req.body.post);
+    if (error) return res.status(400).send({msg: error.details[0].message});
+    
     try {
         const currentUser = await User.findOne({ _id: req.user._id });
         const reflections = currentUser.reflectionEntries
@@ -158,7 +167,7 @@ router.patch('/:reflectionId', verify, async (req, res) => {
             // extra points if more detailed reflection is provided 
             if (req.body.post.extended) {
                 specificReflection.evaluation = req.body.post.evaluation
-                specificReflection.analysis = req.body.post.analysis
+                specificReflection.actions = req.body.post.actions
                 specificReflection.conclusion = req.body.post.conclusion
                 specificReflection.actionPlan = req.body.post.actionPlan
                 if (specificReflection.extended == false) {

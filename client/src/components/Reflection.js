@@ -6,12 +6,20 @@ import {
     deleteObject
 } from '../fetch/generalFetch';
 import { MoodInput } from './Mood';
+import ErrorMessage from './Error'
 
 const reflectionStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid lavender"
+    outline: "thick solid white",
+    overflow: 'scroll',
+    backgroundColor: "lavender"
+}
+
+const textBoxStyle = {
+    width: '95%',
+    height: '40',
 }
 
 async function submitReflection(postUrl, id, 
@@ -25,7 +33,7 @@ async function submitReflection(postUrl, id,
     comB, comD, comA, 
     eva, ana, act, con)
     var extended = false;
-    if (eva != "" || ana != "" || act != "" || con != con) {
+    if (eva !== "" || ana !== "" || act !== "" || con !== "") {
         extended = true
     }
 
@@ -40,7 +48,7 @@ async function submitReflection(postUrl, id,
         commentsDuring: comD,
         commentsAfter: comA,
         evaluation: eva,
-        analysis: ana,
+        actions: ana,
         actionPlan: act,
         conclusion: con,
         extended: extended
@@ -52,11 +60,14 @@ async function submitReflection(postUrl, id,
     } else {
         newPost = await makeNewPost(postUrl, newEntryDetails)
     }
-    if (newPost) {
-        console.log(newPost)
-        id = newPost._id
-        return id
+    console.log(newPost)
+    // error
+    if (newPost.msg) {
+        return newPost
     }
+    console.log(newPost)
+    id = newPost._id
+    return id
 }
 async function deleteReflection(url, id, setChange) {
     console.log("deletereflection...", url, id)
@@ -70,6 +81,7 @@ async function deleteReflection(url, id, setChange) {
     } 
     return []
 }
+
 const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
     // set variables (reflection input)
     const [event, setEvent] = useState("")
@@ -86,6 +98,9 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
     const [eva, setEva] = useState("")
     const [act, setAct] = useState("")
     const [id, setID] = useState(null)
+    // set variables for error msgs
+    const [displayError, setDisplayError] = useState("none")
+    const [error, setError] = useState("")
     if (reflection) {
         setEvent(reflection.event)
         setDes(reflection.description)
@@ -105,8 +120,10 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
       <div style={reflectionStyle}>
         <p>Write a reflection!!!</p>
         <form>
-          <p>Give it a title: 
+          <p>Event title: 
           <input 
+            style={textBoxStyle}
+            placeholder="event"
             type="text"
             value={event}
             onChange={(e) => {
@@ -115,24 +132,27 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
           />
           </p>
           <p>What happened? </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
             value={des}
+            placeholder="description"
             onChange={(e) => {
                 setDes(e.target.value)
             }}
           />
           <p>Action - What did you do in response: </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
+            placeholder="actions"
             value={ana}
             onChange={(e) => {
                 setAna(e.target.value)
             }}
           />
           <p>Lessons Learnt: </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
+            placeholder="what you learnt from this"
             value={learnt}
             onChange={(e) => {
                 setLearnt(e.target.value)
@@ -160,28 +180,36 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
           com={comA}
           />
           <p>Did you think you did a good job? </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
+            placeholder="evaluation"
             value={eva}
             onChange={(e) => {
                 setEva(e.target.value)
             }}
           />
           <p>What would you do if it happened again? </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
+            placeholder="action plan"
             value={act}
             onChange={(e) => {
                 setAct(e.target.value)
             }}
           />
-          <p>Overall how did you think it went: </p>
-          <input 
+          <p>Overall how did you think you went: </p>
+          <textarea
+            style={textBoxStyle} 
+            placeholder="conclusion"
             type="text"
             value={con}
             onChange={(e) => {
                 setCon(e.target.value)
             }}
+          />
+          <ErrorMessage 
+            display={displayError} 
+            msg={error}
           />
           <button 
             title = "Save"
@@ -193,6 +221,15 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
                     comB, comD, comA,
                     eva, ana, act, con
                     )
+                if (newID.msg) {
+                    // show error message
+                    setDisplayError("block")
+                    setError(newID.msg)
+                    return
+                }
+                // ensure no error msg
+                setDisplayError("none")
+                setError("")
                 setID(newID)
                 console.log("newID", newID)
             }}
@@ -327,7 +364,7 @@ const ViewReflections = ({reflectionUrl}) => {
     } catch (error) {
         console.log(error)
     }
-    return (<div>
+    return (<div style={reflectionStyle}>
         Your Reflections:
         {reflections.map((reflection) => 
           (<ViewReflection

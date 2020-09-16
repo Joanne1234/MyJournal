@@ -1,15 +1,22 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import 'rc-slider/assets/index.css';
 import { 
     makeNewPost
 } from '../fetch/generalFetch';
-import { getPOSTParams } from '../fetch/params';
+import ErrorMessage from './Error'
+
 
 const signUpStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid orange"
+    outline: "thick solid orange",
+    alignSelf: 'center',
+}
+
+const reqStyle = {
+    fontSize: "smaller",
+    fontWeight: "lighter",
 }
 
 async function submitSignUp(postUrl, name, email, password) {
@@ -27,6 +34,8 @@ const SignUpForm= React.memo(({url}) => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [displayError, setDisplayError] = useState("none")
+    const [error, setError] = useState("")
     return (
       <div style={signUpStyle}>
         <form>
@@ -54,16 +63,25 @@ const SignUpForm= React.memo(({url}) => {
             }}
           />
           </p>
-          
+          <p style={reqStyle}>Must be at least 6 characters long</p>
+          <ErrorMessage 
+            display={displayError} 
+            msg={error}
+          />
           <button 
             onClick={async (e) => {
                 e.preventDefault()
                 const user = await submitSignUp(url,name,email,password)
                 console.log("user", user)
-                if (user) {
-                    sessionStorage.setItem('authToken', user["authToken"])
-                    sessionStorage.setItem('refreshToken', user["refreshToken"])
+                // invalid login details
+                if (user.msg) {
+                  setDisplayError("block")
+                  setError(user.msg)
+                  return
                 }
+                setDisplayError("none")
+                sessionStorage.setItem('authToken', user["authToken"])
+                sessionStorage.setItem('refreshToken', user["refreshToken"])
             }}
           > 
             Sign Up

@@ -1,14 +1,16 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import 'rc-slider/assets/index.css';
 import { 
     makeNewPost
 } from '../fetch/generalFetch';
+import ErrorMessage from './Error'
 
 const loginStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid yellow"
+    outline: "thick solid cornsilk",
+    alignSelf: 'center',
 }
 
 async function submitLogin(postUrl, email, password) {
@@ -24,6 +26,8 @@ async function submitLogin(postUrl, email, password) {
 const LoginForm= React.memo(({url}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [displayError, setDisplayError] = useState("none")
+    const [error, setError] = useState("")
     return (
       <div style={loginStyle}>
         <form>
@@ -43,12 +47,19 @@ const LoginForm= React.memo(({url}) => {
             }}
           />
           </p>
-          
+          <ErrorMessage display={displayError} msg={error}/>
           <button 
             onClick={async (e) => {
                 e.preventDefault()
                 const user = await submitLogin(url,email,password)
-                console.log("user", user)
+                // invalid login details
+                if (user.msg) {
+                  setDisplayError("block")
+                  setError(user.msg)
+                  return
+                }
+                setDisplayError("none")
+                setError("")
                 sessionStorage.setItem('authToken', user["authToken"])
                 sessionStorage.setItem('refreshToken', user["refreshToken"])
             }}

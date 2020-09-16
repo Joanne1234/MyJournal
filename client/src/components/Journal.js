@@ -6,12 +6,20 @@ import {
     deleteObject
 } from '../fetch/generalFetch';
 import { MoodInput } from './Mood';
+import ErrorMessage from './Error'
 
 const journalStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid palegreen"
+    outline: "thick solid white",
+    backgroundColor: "palegreen",
+    overflow: 'scroll',
+}
+
+const textBoxStyle = {
+    width: '95%',
+    height: '40',
 }
 
 async function submitJournal(postUrl, id, title, entry, positives, scale, comments) {
@@ -30,11 +38,11 @@ async function submitJournal(postUrl, id, title, entry, positives, scale, commen
     } else {
         newPost = await makeNewPost(postUrl, newEntryDetails)
     }
-    if (newPost) {
-        console.log(newPost)
-        id = newPost._id
-        return id
+    if (newPost.msg) {
+        return newPost
     }
+    id = newPost._id
+    return id
 }
 async function deleteJournal(url, id, setChange) {
     console.log("deletejournal...", url, id)
@@ -55,6 +63,8 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
     const [mood, setMood] = useState(0)
     const [com, setCom] = useState("")
     const [id, setID] = useState(null)
+    const [displayError, setDisplayError] = useState("none")
+    const [error, setError] = useState("")
     if (journal) {
         setTitle(journal.title)
         setEntry(journal.entry)
@@ -68,6 +78,7 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
           <p>Entry Title: 
           <input 
             type="text"
+            style={textBoxStyle}
             value={title}
             onChange={(e) => {
                 setTitle(e.target.value)
@@ -75,16 +86,16 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
           />
           </p>
           <p>Your Entry: </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
             value={entry}
             onChange={(e) => {
                 setEntry(e.target.value)
             }}
           />
           <p>What were the positives? </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
             value={positives}
             onChange={(e) => {
                 setPositives(e.target.value)
@@ -98,11 +109,24 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
           com={com}
           />
           <p/>
+          <ErrorMessage 
+            display={displayError} 
+            msg={error}
+          />
           <button 
             title = "Save"
             onClick={async (e) => {
                 e.preventDefault()
                 const newID = await submitJournal(journalUrl, id, title, entry, positives, mood, com)
+                if (newID.msg) {
+                    // show error message
+                    setDisplayError("block")
+                    setError(newID.msg)
+                    return
+                }
+                // ensure no error msg
+                setDisplayError("none")
+                setError("")
                 setID(newID)
                 console.log("newID", newID)
             }}
@@ -180,7 +204,7 @@ const ViewJournalSimple = ({journalUrl, journal, setChange}) => {
                 e.preventDefault()
             }}
           > 
-            View Reflection
+            View Journal
           </button>
           <button 
             title = "Edit"
@@ -221,10 +245,10 @@ const ViewJournals = ({journalUrl}) => {
     } catch (error) {
         console.log(error)
     }
-    return (<div>
+    return (<div style={journalStyle}>
         Your Journals:
         {journals.map((journal) => 
-          (<ViewJournalSimple
+          (<ViewJournal
             journal={journal} 
             journalUrl={journalUrl} 
             setJournals={setJournals}

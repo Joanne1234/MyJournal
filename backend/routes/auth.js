@@ -15,19 +15,19 @@ const refreshTokenLifetime = '120m'
 
 // Validation
 
-router.post("/register", async (req, res) => {
+router.post("/signup", async (req, res) => {
     // Validate data
     
     const { error } = myValidSchemas.RegisterationValidation.validate(req.body.post);
 
-    if (error) return res.status(400).send("Invalid Details");
+    if (error) return res.status(400).send({msg: error.details[0].message});
 
     // Check if user exists in the data base
 
     const EmailExists = await User.findOne({ email: req.body.post.email });
 
     if (EmailExists) {
-        return res.status(400).send("Email already exists");
+        return res.status(400).send({msg: "Email already exists"});
     }
 
     // Hash password
@@ -67,18 +67,18 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     const { error } = myValidSchemas.LogInValidation.validate(req.body.post);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send({msg: error.details[0].message});
 
     const user = await User.findOne({ email: req.body.post.email });
 
     // check user email exists
     if (!user) {
-        return res.status(400).send("Cannot find email");
+        return res.status(400).send({msg: "Email does not exist"});
     }
 
     // check password is correct
     const validPass = await bcrypt.compare(req.body.post.password, user.password);
-    if (!validPass) return res.status(500).send("Invalid Password");
+    if (!validPass) return res.status(500).send({msg: "Invalid Password"});
 
     // create and assign token
     try {
@@ -97,7 +97,7 @@ router.post("/login", async (req, res) => {
             .set("refresh-token", refreshToken)
             .send({authToken, refreshToken});
     } catch (error) {
-        return res.status(400).send(error);
+        return res.status(400).send({msg: error});
     }
 });
 
@@ -139,7 +139,7 @@ router.post("/logout", verify, async (req, res) => {
             .set("auth-token", null)
             .send("Logged out");
     } catch (error) {
-        return res.status(400).send(error);
+        return res.status(400).send({msg: error});
     }
 });
 

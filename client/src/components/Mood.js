@@ -9,15 +9,14 @@ import {
 
 const moodStyle = {
     alignContent: 'center',
-    margin: 5,
+    margin: 10,
     padding: 5,
-    outline: "thick solid paleturquoise"
+    outline: "thick solid paleturquoise",
+    backgroundColor: "paleturquoise",
 }
 
 const moodSlider = {
     position: 'inherit',
-    margin: 5,
-    padding: 5
 }
 
 async function submitMood(postUrl, id, scale, comments) {
@@ -87,7 +86,7 @@ const MoodInput = React.memo(({text1, scale, setScale, setCom, com}) => {
     const [id, setID] = useState(null)*/
     return (
       <div style={moodStyle}>
-        <p>{text1} </p>
+        <p>{text1}</p>
         <div style={moodSlider}>
           <Slider
             min={-1}
@@ -99,7 +98,7 @@ const MoodInput = React.memo(({text1, scale, setScale, setCom, com}) => {
           />
           <p>{scale}</p>
         </div>
-        <p>Any comments?</p>
+        <p>Comments:
         <input 
           type="text"
           value={com}
@@ -107,6 +106,7 @@ const MoodInput = React.memo(({text1, scale, setScale, setCom, com}) => {
             setCom(e.target.value)
           }}
         />
+        </p>
       </div>
     );
 })
