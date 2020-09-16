@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import 'rc-slider/assets/index.css';
 import { 
     makeNewPost
@@ -8,7 +8,8 @@ const loginStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid yellow"
+    outline: "thick solid cornsilk",
+    alignSelf: 'center',
 }
 
 async function submitLogin(postUrl, email, password) {

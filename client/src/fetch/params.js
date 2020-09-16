@@ -2,7 +2,8 @@ function getHeader() {
     return({
         Accept: "application/json",
         "Content-Type": "application/json",
-        "auth-token": sessionStorage.getItem('authToken')
+        "auth-token": sessionStorage.getItem('authToken')//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjYwOThmZmU1Zjg4ZWU2YmMzNjc1NjAiLCJpYXQiOjE2MDAxODc4OTYsImV4cCI6MTYwMDE5MDU5Nn0.gFFRtpzrUagOzG9jutqZ2slccMwM6tpBY1DYEjqayeo"
+        //sessionStorage.getItem('authToken')
     })
 }
 

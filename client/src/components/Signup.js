@@ -1,15 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import 'rc-slider/assets/index.css';
 import { 
     makeNewPost
 } from '../fetch/generalFetch';
-import { getPOSTParams } from '../fetch/params';
 
 const signUpStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid orange"
+    outline: "thick solid orange",
+    alignSelf: 'center',
 }
 
 async function submitSignUp(postUrl, name, email, password) {

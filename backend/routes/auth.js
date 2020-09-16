@@ -15,7 +15,7 @@ const refreshTokenLifetime = '120m'
 
 // Validation
 
-router.post("/register", async (req, res) => {
+router.post("/signup", async (req, res) => {
     // Validate data
     
     const { error } = myValidSchemas.RegisterationValidation.validate(req.body.post);

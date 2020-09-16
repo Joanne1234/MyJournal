@@ -4,13 +4,39 @@ import {
     patch, 
     getObject
 } from '../fetch/generalFetch';
+import Image from './Image'
+import egg from '../assets/egg.png'
+import baby from '../assets/baby.png'
+import toddler from '../assets/toddler.png'
+import teen from '../assets/teen.png'
+import adult from '../assets/adult.png'
+
+const petStates = [egg, baby, toddler, teen, adult]
 
 const petStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid lightcoral"
+    alignSelf: 'center',
+    textAlign: 'center'
 }
+
+const infoStyle = {
+    backgroundColor: "lightcoral",
+    padding: 3,
+}
+
+const imageStyle = {
+    padding: 5,
+    margin: 5,
+    alignContent: 'center',
+    display: 'block',
+    visibility: 'visible',
+}
+
+const imageWidth = "auto"
+const imageHeight = Math.floor(window.innerHeight / 2)
+
 function differenceInDays(day1, day2) {
     const date1 = new Date (day1)
     const date2 = new Date (day2)
@@ -64,7 +90,8 @@ const PetNameInput = ({petUrl, name, setName, setChange}) => {
 }
 
 const ViewPet = ({petUrl}) => {
-    const [name, setName] = useState("")
+    const [status, setStatus] = useState(0)
+    const [name, setName] = useState("Rocky")
     const [level, setLevel] = useState(0)
     const [health, setHealth] = useState(100)
     const [days, setDays] = useState(0)
@@ -80,12 +107,16 @@ const ViewPet = ({petUrl}) => {
         async function getPet(url) {
             const pet = await getObject(url)
             // update pet object
+            if (!pet) {
+                return
+            }
             setPet(pet)
-            console.log(url, pet)
             const date = pet.dateCreated
             setName(pet.name)
+            setNewName(pet.name)
             setLevel(pet.level)
             setHealth(pet.health)
+            setStatus(Math.round(pet.level/5))
             setFoodToLevelUp(pet.foodRequiredToLevelUp)
             setDays(differenceInDays(date, Date.now()))
             setOverallFoodIntake(pet.overallFoodIntake)
@@ -100,6 +131,14 @@ const ViewPet = ({petUrl}) => {
     }
     return (
       <div style={petStyle}>
+          <Image 
+            src={petStates[status]} 
+            alt={name}
+            width={imageWidth}
+            height={imageHeight}
+            style={imageStyle}
+          />
+          <div style={infoStyle}>
           <p>{name}</p>
           <input 
             type="text" 
@@ -137,10 +176,12 @@ const ViewPet = ({petUrl}) => {
               Feed
             </button>
           </p>
+          </div>
       </div>)
 }
 
 const ViewPetSimple = ({petUrl}) => {
+    const [status, setStatus] = useState(0)
     const [name, setName] = useState("")
     const [level, setLevel] = useState(0)
     const [health, setHealth] = useState(100)
@@ -152,10 +193,14 @@ const ViewPetSimple = ({petUrl}) => {
         //  get pet info from backend API
         async function getPet(url) {
             const pet = await getObject(url)
+            if (!pet) {
+                return
+            }
             // update pet object
             setPet(pet)
             setName(pet.name)
             setLevel(pet.level)
+            setStatus(Math.round(pet.level/5))
             setHealth(pet.health)
             setOverallFoodIntake(pet.overallFoodIntake)
             setFoodNextLevel(pet.overallFoodIntake + pet.foodRequiredToLevelUp)
@@ -169,9 +214,18 @@ const ViewPetSimple = ({petUrl}) => {
     }
     return (
       <div style={petStyle}>
-          <p>{name}</p>
-          <p>Level: {level}  {overallFoodIntake}/{foodNextLevel} </p>
-          <p>Health: {health} </p>
+          <Image 
+            src={petStates[status]} 
+            alt={name}
+            width={imageWidth}
+            height={imageHeight}
+            style={imageStyle}
+          />
+          <div style={infoStyle}>
+            <p>{name}</p>
+            <p>Level: {level}  {overallFoodIntake}/{foodNextLevel} </p>
+            <p>Health: {health} </p>
+          </div>
       </div>)
 }
 

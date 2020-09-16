@@ -11,7 +11,13 @@ const journalStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid palegreen"
+    outline: "thick solid palegreen",
+    backgroundColor: "palegreen"
+}
+
+const textBoxStyle = {
+    width: '95%',
+    height: '40',
 }
 
 async function submitJournal(postUrl, id, title, entry, positives, scale, comments) {
@@ -68,6 +74,7 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
           <p>Entry Title: 
           <input 
             type="text"
+            style={textBoxStyle}
             value={title}
             onChange={(e) => {
                 setTitle(e.target.value)
@@ -75,16 +82,16 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
           />
           </p>
           <p>Your Entry: </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
             value={entry}
             onChange={(e) => {
                 setEntry(e.target.value)
             }}
           />
           <p>What were the positives? </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
             value={positives}
             onChange={(e) => {
                 setPositives(e.target.value)

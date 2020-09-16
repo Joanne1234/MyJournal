@@ -11,7 +11,14 @@ const reflectionStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid lavender"
+    outline: "thick solid lavender",
+    overflow: 'scroll',
+    backgroundColor: "lavender"
+}
+
+const textBoxStyle = {
+    width: '95%',
+    height: '40',
 }
 
 async function submitReflection(postUrl, id, 
@@ -25,7 +32,7 @@ async function submitReflection(postUrl, id,
     comB, comD, comA, 
     eva, ana, act, con)
     var extended = false;
-    if (eva != "" || ana != "" || act != "" || con != con) {
+    if (eva !== "" || ana !== "" || act !== "" || con !== "") {
         extended = true
     }
 
@@ -70,6 +77,7 @@ async function deleteReflection(url, id, setChange) {
     } 
     return []
 }
+
 const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
     // set variables (reflection input)
     const [event, setEvent] = useState("")
@@ -107,6 +115,7 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
         <form>
           <p>Give it a title: 
           <input 
+            style={textBoxStyle}
             type="text"
             value={event}
             onChange={(e) => {
@@ -115,24 +124,24 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
           />
           </p>
           <p>What happened? </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
             value={des}
             onChange={(e) => {
                 setDes(e.target.value)
             }}
           />
           <p>Action - What did you do in response: </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
             value={ana}
             onChange={(e) => {
                 setAna(e.target.value)
             }}
           />
           <p>Lessons Learnt: </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
             value={learnt}
             onChange={(e) => {
                 setLearnt(e.target.value)
@@ -160,23 +169,24 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
           com={comA}
           />
           <p>Did you think you did a good job? </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
             value={eva}
             onChange={(e) => {
                 setEva(e.target.value)
             }}
           />
           <p>What would you do if it happened again? </p>
-          <input 
-            type="text"
+          <textarea 
+            style={textBoxStyle}
             value={act}
             onChange={(e) => {
                 setAct(e.target.value)
             }}
           />
-          <p>Overall how did you think it went: </p>
-          <input 
+          <p>Overall how did you think you went: </p>
+          <textarea
+            style={textBoxStyle} 
             type="text"
             value={con}
             onChange={(e) => {
@@ -330,7 +340,7 @@ const ViewReflections = ({reflectionUrl}) => {
     return (<div>
         Your Reflections:
         {reflections.map((reflection) => 
-          (<ViewReflection
+          (<ViewReflectionSimple
             reflection={reflection} 
             reflectionUrl={reflectionUrl} 
             setReflections={setReflections}
