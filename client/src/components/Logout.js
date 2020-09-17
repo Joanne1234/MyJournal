@@ -10,20 +10,26 @@ async function logout() {
 const Logout = ({url}) => {
     return (
       <div>
-        <button 
-            title = "Logout"
-            onClick={async (e) => {
-                e.preventDefault()
-                const loggedout = await logout(url)
-                console.log(loggedout)
-                // clear tokens
-                sessionStorage.removeItem('authToken')
-                sessionStorage.removeItem('refreshToken')
-                // return to login/signup page
-            }}
-          > 
-          Log out
-          </button>
+        <Switch>
+          <Link to={{pathname: '/logout'}} style={HomeStyle}>
+            <button 
+              title = "Logout"
+              onClick={async (e) => {
+                  e.preventDefault()
+                  const loggedout = await logout(url)
+                  console.log(loggedout)
+                  // clear tokens
+                  sessionStorage.removeItem('authToken')
+                  sessionStorage.removeItem('refreshToken')
+                  // return to login/signup page
+                  history.push('/login')
+              }}
+            > 
+              Log out
+            </button>
+          </Link>{' '}
+          <Route path="/"component={() => <LoginHome url={url}/>}/>
+        </Switch>
       </div>
     )
 }

@@ -154,7 +154,7 @@ const ViewMoods = ({moodUrl}) => {
     } catch (error) {
         console.log(error)
     }
-    return (<div>
+    return (<div style={moodStyle}>
         Your Moods:
         {moods.map((mood) => (<ViewMood mood={mood} key={mood._id}/>))}
     </div>)

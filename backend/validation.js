@@ -17,7 +17,7 @@ const LogInValidation = Joi.object({
 
 const MoodValidation = Joi.object({
     mood: Joi.number().required(),
-    comments: Joi.string().min(0),
+    comments: Joi.string().allow('')
 });
 
 const JournalValidation = Joi.object({

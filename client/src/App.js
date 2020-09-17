@@ -6,9 +6,9 @@ import LoginForm from './components/Login'
 import {ReflectionInput, ViewReflections} from './components/Reflection'
 import {ViewPet, ViewPetSimple} from './components/Pet'
 import background from './assets/StartingBackground.png';
-import egg from './assets/egg.png'
 import Home from './components/Home'
 import LoginHome from './components/LoginHome'
+import { BrowserRouter } from 'react-router-dom';
 const url = "http://localhost:5000/api/"
 const style = {  
   backgroundImage: "url(" + background + ")",
@@ -24,13 +24,14 @@ const style = {
   opacity: 0.8,
 }
 function App() {
-  console.log(egg)
   return (
     <div 
       style={style}
     >
       <h1>My Secret Garden</h1>
-      <LoginHome url={url}/>
+      <BrowserRouter>
+        <LoginHome url={url}/>
+      </BrowserRouter>
       
     </div>
   );

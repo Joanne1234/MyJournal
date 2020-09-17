@@ -7,7 +7,11 @@ import {
 import React from 'react';
 import SignUpForm from './Signup'
 import LoginForm from './Login'
-
+import { ViewMoods, MoodForm } from './Mood';
+import { ViewPet } from './Pet';
+import {ViewReflections, ReflectionInput } from './Reflection';
+import {ViewJournals,ViewJournal,JournalInput} from './Journal'
+import Home from './Home'
 
 const LoginHomeStyle = {
     alignContent: 'center',
@@ -19,15 +23,16 @@ const LoginHomeStyle = {
 }
  
 const LoginHome = ({url}) => (
-    <Router>
+    <div>
         <Link to={{pathname: '/login'}} style={LoginHomeStyle}>Login</Link>{' '}
         <Link to={{pathname: '/signup'}} style={LoginHomeStyle}>Sign Up</Link>{' '}
         <div>
         <Switch>
             <Route path="/login" component={() => <LoginForm baseUrl={url} url={url+"user/login"}/>}/>
-            <Route path="/signup"component={() => <SignUpForm baseUrl={url} url={url+"user/login"}/>}/>
-            </Switch>
+            <Route path="/signup"component={() => <SignUpForm baseUrl={url} url={url+"user/signup"}/>}/>
+            <Route exact path="/home" component={() => <Home url={url}/>}/>
+        </Switch>
       </div>
-    </Router>
+    </div>
   );
 export default LoginHome;

@@ -11,6 +11,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import Home from './Home'
+import history from './history'
 
 const signUpStyle = {
     alignContent: 'center',
@@ -74,31 +75,32 @@ const SignUpForm= React.memo(({url}) => {
             display={displayError} 
             msg={error}
           />
-          <Router>
-            <div>
-              <button 
-                onClick={async (e) => {
-                  e.preventDefault()
-                  const user = await submitSignUp(url,name,email,password)
-                  console.log("user", user)
-                  // invalid login details
-                  if (user.msg) {
-                    setDisplayError("block")
-                    setError(user.msg)
-                    return
-                  }
-                  setDisplayError("none")
-                  sessionStorage.setItem('authToken', user["authToken"])
-                  sessionStorage.setItem('refreshToken', user["refreshToken"])
-                }}
-            > 
-              Sign Up
-            </button>
+          <div>
             <Switch>
+              <Link to={{pathname: '/home'}}>
+                <button 
+                  onClick={async (e) => {
+                    e.preventDefault()
+                    const user = await submitSignUp(url,name,email,password)
+                    console.log("user", user)
+                    // invalid login details
+                    if (user.msg) {
+                      setDisplayError("block")
+                      setError(user.msg)
+                      return
+                    }
+                    setDisplayError("none")
+                    sessionStorage.setItem('authToken', user["authToken"])
+                    sessionStorage.setItem('refreshToken', user["refreshToken"])
+                    history.push('/home')
+                  }}
+                > 
+                  Sign Up
+                </button>
+                </Link>
                 <Route path="/home" component={() => <Home baseUrl={url}/>}/>
-                </Switch>
+              </Switch>
             </div>
-          </Router>
         </form>
       </div>
     );

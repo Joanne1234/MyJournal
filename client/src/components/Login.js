@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {
-  BrowserRouter as Router,
   Link,
   Route,
   Switch,
@@ -11,6 +10,7 @@ import {
 } from '../fetch/generalFetch';
 import ErrorMessage from './Error'
 import Home from './Home'
+import history from './history'
 
 const loginStyle = {
     alignContent: 'center',
@@ -36,7 +36,7 @@ const LoginForm= React.memo(({baseUrl, url}) => {
     const [displayError, setDisplayError] = useState("none")
     const [error, setError] = useState("")
     async function login() {
-      const user = await submitLogin(url,email,password)
+      const user = await submitLogin(url, email, password)
         console.log("user:")
         console.log(user)
         // invalid login details
@@ -77,30 +77,30 @@ const LoginForm= React.memo(({baseUrl, url}) => {
           />
           </p>
           <ErrorMessage display={displayError} msg={error}/>
-          <Router>
-            <div>
+          <div>
+          <Switch>
             <Link to={{pathname: '/home'}}>
             <button 
               onClick={async (e) => {
                 console.log("button clicked")
+                e.preventDefault()
                 const loggedIn = await login()
-                console.log(loggedIn)
-                if (loggedIn) {
+                console.log("loggin:", loggedIn)
+                if (!loggedIn) {
                     console.log("not loggedin...", loggedIn)
-                    e.preventDefault()
                     return
                 }
+                console.log("going home")
+                history.push('/home')
                 console.log("loggedin". loggedIn)
             }}
-          > Login
-          </button>
-          </Link>{' '}
-          <Switch>
-                <Route path="/home" component={() => <Home baseUrl={baseUrl}/>}/>
-                </Switch>
-            </div>
-          </Router>
-
+            > 
+              Login
+            </button>
+            </Link>{' '}
+              <Route exact path="/home" component={() => <Home url={baseUrl}/>}/>
+          </Switch>
+          </div>
         </form>
       </div>
     );

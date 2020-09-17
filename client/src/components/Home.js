@@ -9,6 +9,7 @@ import { ViewMoods, MoodForm } from './Mood';
 import { ViewPet } from './Pet';
 import {ViewReflections, ReflectionInput } from './Reflection';
 import {ViewJournals,ViewJournal,JournalInput} from './Journal'
+import LoginHome from './LoginHome';
  
 const HomeStyle = {
   alignContent: 'center',
@@ -27,17 +28,17 @@ const Home = ({url}) => (
       <Link to={{pathname: '/reflections'}} style={HomeStyle}>Reflections</Link>{' '}
       <Link to={{pathname: '/newreflection'}} style={HomeStyle}>New Reflection</Link>{' '}        <Link to={{pathname: '/moods'}} style={HomeStyle}>Mood</Link>{' '}
       <Link to={{pathname: '/newmood'}} style={HomeStyle}>New Mood</Link>{' '}
-      <div>
-        <Switch>
-          <Route path="/pet"component={ViewPet}/>
-          <Route path="/journals" component={ViewJournals}/>
-          <Route path="/newjournal"component={JournalInput}/>
-          <Route path="/reflections"component={ViewReflections}/>
-          <Route path="/newreflection"component={ReflectionInput}/>
-          <Route path="/moods"component={ViewMoods}/>
-          <Route path="/newmood"component={MoodForm}/>
-        </Switch>
-      </div>
+      <Link to={{pathname: '/logout'}} style={HomeStyle}>Logout</Link>{' '}
+      <Switch>
+        <Route path="/pet"component={() => <ViewPet petUrl={url+"pet"}/>}/>
+        <Route path="/journals" component={() => <ViewJournals journalUrl={url+"journal"}/>}/>
+        <Route path="/newjournal"component={() => <JournalInput petUrl={url+"journal"}/>}/>
+        <Route path="/reflections"component={() => <ViewReflections reflectionUrl={url+"reflection"}/>}/>
+        <Route path="/newreflection"component={() => <ReflectionInput reflectionUrl={url+"reflection"}/>}/>
+        <Route path="/moods"component={() => <ViewMoods moodUrl={url+"moods"}/>}/>
+        <Route path="/newmood"component={() => <MoodForm moodUrl={url+"moods"}/>}/>
+        <Route path="/login"component={() => <LoginHome url={url}/>}/>
+      </Switch>
     </Router>
   );
 export default Home;
