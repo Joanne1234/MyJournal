@@ -62,7 +62,7 @@ async function submitReflection(postUrl, id,
     }
     console.log(newPost)
     // error
-    if (newPost.msg) {
+    if (newPost && newPost.msg) {
         return newPost
     }
     console.log(newPost)
@@ -221,7 +221,7 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
                     comB, comD, comA,
                     eva, ana, act, con
                     )
-                if (newID.msg) {
+                if (newID && newID.msg) {
                     // show error message
                     setDisplayError("block")
                     setError(newID.msg)
@@ -367,7 +367,7 @@ const ViewReflections = ({reflectionUrl}) => {
     return (<div style={reflectionStyle}>
         Your Reflections:
         {reflections.map((reflection) => 
-          (<ViewReflection
+          (<ViewReflectionSimple
             reflection={reflection} 
             reflectionUrl={reflectionUrl} 
             setReflections={setReflections}

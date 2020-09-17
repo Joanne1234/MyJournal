@@ -3,6 +3,7 @@ import {
     getGETParams, 
     getPATCHParams, 
     getDELETEParams,
+    getRefreshParams
 } from './params'
 
 async function makeNewPost(url, post) {
@@ -56,9 +57,23 @@ async function deleteObject(url) {
     }
 }
 
+async function getNewToken(url) {
+    // get list of items
+    let res = null;
+    try {
+        await fetch(url, getRefreshParams())
+        res = await res.json()
+        return res
+    } catch (err) {
+        console.log("GET Error:", err);
+        return err
+    }
+}
+
 export { 
     makeNewPost, 
     getObject, 
     patch, 
-    deleteObject
+    deleteObject,
+    getNewToken
 }

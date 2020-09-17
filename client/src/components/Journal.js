@@ -118,7 +118,7 @@ const JournalInput = React.memo(({journalUrl, journal}) => {
             onClick={async (e) => {
                 e.preventDefault()
                 const newID = await submitJournal(journalUrl, id, title, entry, positives, mood, com)
-                if (newID.msg) {
+                if (newID && newID.msg) {
                     // show error message
                     setDisplayError("block")
                     setError(newID.msg)
@@ -248,7 +248,7 @@ const ViewJournals = ({journalUrl}) => {
     return (<div style={journalStyle}>
         Your Journals:
         {journals.map((journal) => 
-          (<ViewJournal
+          (<ViewJournalSimple
             journal={journal} 
             journalUrl={journalUrl} 
             setJournals={setJournals}
