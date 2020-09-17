@@ -8,7 +8,6 @@ import {ViewPet, ViewPetSimple} from './components/Pet'
 import background from './assets/StartingBackground.png';
 import url from './components/url'
 import Logout from './components/Logout'
-import ReAuth from './components/ReAuth'
 
 const style = {  
   backgroundImage: "url(" + background + ")",
@@ -29,6 +28,7 @@ function App() {
       style={style}
     >
       <h1>My Secret Garden</h1>
+      <LoginForm url={url+"user/login"}/>
       <Logout/>
       <ReflectionInput reflectionUrl={url+"reflection"}/>
     </div>

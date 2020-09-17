@@ -127,7 +127,7 @@ router.post("/logout", verify, async (req, res) => {
         return res
             .status(200)
             .set("auth-token", null)
-            .send("Logged out");
+            .send({msg: "Logged out"});
     } catch (error) {
         return res.status(400).send({msg: error});
     }

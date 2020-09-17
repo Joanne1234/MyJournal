@@ -17,8 +17,8 @@ const Logout = ({url}) => {
                 const loggedout = await logout(url)
                 console.log(loggedout)
                 // clear tokens
-                sessionStorage.setItem('authToken', null)
-                sessionStorage.setItem('refreshToken', null)
+                sessionStorage.removeItem('authToken')
+                sessionStorage.removeItem('refreshToken')
                 // return to login/signup page
             }}
           > 
