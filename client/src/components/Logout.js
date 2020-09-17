@@ -1,6 +1,14 @@
 import React from 'react'
 import {makeNewPost} from '../fetch/generalFetch'
 import url from './url'
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Switch,
+} from 'react-router-dom';
+import LoginHome from './LoginHome'
+import history from './history'
 
 async function logout() {
     const loggedout = await makeNewPost(url+"user/logout", {})
@@ -11,7 +19,7 @@ const Logout = ({url}) => {
     return (
       <div>
         <Switch>
-          <Link to={{pathname: '/logout'}} style={HomeStyle}>
+          <Link to={{pathname: '/logout'}}>
             <button 
               title = "Logout"
               onClick={async (e) => {
@@ -28,7 +36,7 @@ const Logout = ({url}) => {
               Log out
             </button>
           </Link>{' '}
-          <Route path="/"component={() => <LoginHome url={url}/>}/>
+          <Route path="/login"component={() => <LoginHome url={url}/>}/>
         </Switch>
       </div>
     )

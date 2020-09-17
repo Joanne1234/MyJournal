@@ -13,6 +13,7 @@ const moodStyle = {
     padding: 5,
     outline: "thick solid paleturquoise",
     backgroundColor: "paleturquoise",
+    overflow: 'scroll',
 }
 
 const moodSlider = {

@@ -10,6 +10,7 @@ import { ViewPet } from './Pet';
 import {ViewReflections, ReflectionInput } from './Reflection';
 import {ViewJournals,ViewJournal,JournalInput} from './Journal'
 import LoginHome from './LoginHome';
+import Logout from './Logout';
  
 const HomeStyle = {
   alignContent: 'center',
@@ -28,7 +29,7 @@ const Home = ({url}) => (
       <Link to={{pathname: '/reflections'}} style={HomeStyle}>Reflections</Link>{' '}
       <Link to={{pathname: '/newreflection'}} style={HomeStyle}>New Reflection</Link>{' '}        <Link to={{pathname: '/moods'}} style={HomeStyle}>Mood</Link>{' '}
       <Link to={{pathname: '/newmood'}} style={HomeStyle}>New Mood</Link>{' '}
-      <Link to={{pathname: '/logout'}} style={HomeStyle}>Logout</Link>{' '}
+      <Logout url={url}/>
       <Switch>
         <Route path="/pet"component={() => <ViewPet petUrl={url+"pet"}/>}/>
         <Route path="/journals" component={() => <ViewJournals journalUrl={url+"journal"}/>}/>
