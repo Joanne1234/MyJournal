@@ -111,7 +111,7 @@ const ViewPet = ({petUrl}) => {
                 return
             }
             setPet(pet)
-            const date = pet.dateCreated
+            const date = pet.born
             setName(pet.name)
             setNewName(pet.name)
             setLevel(pet.level)

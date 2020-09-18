@@ -6,9 +6,10 @@ import LoginForm from './components/Login'
 import {ReflectionInput, ViewReflections} from './components/Reflection'
 import {ViewPet, ViewPetSimple} from './components/Pet'
 import background from './assets/StartingBackground.png';
-import url from './components/url'
-import Logout from './components/Logout'
-
+import Home from './components/Home'
+import LoginHome from './components/LoginHome'
+import { BrowserRouter } from 'react-router-dom';
+const url = "http://localhost:5000/api/"
 const style = {  
   backgroundImage: "url(" + background + ")",
   backgroundPosition: 'center',
@@ -19,18 +20,30 @@ const style = {
   position: 'absolute',
   padding: 10,
   display: 'flex',
-  justifyContent: 'center',
+  flexDirection:'column',
+  //justifyContent: 'center',
   opacity: 0.8,
+  overflow: 'scroll'
 }
+
+const header_style = {
+  alignContent:'center',
+  alignItems: 'center',
+  display:'flex',
+  flexDirection:'column'
+}
+
 function App() {
   return (
     <div 
       style={style}
     >
-      <h1>My Secret Garden</h1>
-      <LoginForm url={url+"user/login"}/>
-      <Logout/>
-      <ReflectionInput reflectionUrl={url+"reflection"}/>
+      <h1 style={header_style}>My Secret Garden</h1>
+      <div>
+      <BrowserRouter>
+        <LoginHome url={url}/>
+      </BrowserRouter>
+      </div>
     </div>
   );
 }

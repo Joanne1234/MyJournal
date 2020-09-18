@@ -4,14 +4,21 @@ import {
     makeNewPost
 } from '../fetch/generalFetch';
 import ErrorMessage from './Error'
-
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Switch,
+} from 'react-router-dom';
+import Home from './Home'
+import history from './history'
 
 const signUpStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid orange",
-    alignSelf: 'center',
+    backgroundColor: "orange",
+    alignSelf: 'center'
 }
 
 const reqStyle = {
@@ -68,32 +75,32 @@ const SignUpForm= React.memo(({url}) => {
             display={displayError} 
             msg={error}
           />
-          <button 
-            onClick={async (e) => {
-                e.preventDefault()
-                const user = await submitSignUp(url,name,email,password)
-                console.log("user", user)
-                // invalid login details
-                if (user.msg) {
-                  setDisplayError("block")
-                  setError(user.msg)
-                  return
-                }
-                setDisplayError("none")
-                sessionStorage.setItem('authToken', user["authToken"])
-                sessionStorage.setItem('refreshToken', user["refreshToken"])
-            }}
-          > 
-            Sign Up
-          </button>
-          <button 
-            title = "Back"
-            onClick={async (e) => {
-                e.preventDefault()
-            }}
-          > 
-            Back 
-          </button>
+          <div>
+            <Switch>
+              <Link to={{pathname: '/home'}}>
+                <button 
+                  onClick={async (e) => {
+                    e.preventDefault()
+                    const user = await submitSignUp(url,name,email,password)
+                    console.log("user", user)
+                    // invalid login details
+                    if (user.msg) {
+                      setDisplayError("block")
+                      setError(user.msg)
+                      return
+                    }
+                    setDisplayError("none")
+                    sessionStorage.setItem('authToken', user["authToken"])
+                    sessionStorage.setItem('refreshToken', user["refreshToken"])
+                    history.push('/home')
+                  }}
+                > 
+                  Sign Up
+                </button>
+                </Link>
+                <Route path="/home" component={() => <Home baseUrl={url}/>}/>
+              </Switch>
+            </div>
         </form>
       </div>
     );

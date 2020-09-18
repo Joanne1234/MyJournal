@@ -13,6 +13,7 @@ const moodStyle = {
     padding: 5,
     outline: "thick solid paleturquoise",
     backgroundColor: "paleturquoise",
+    overflow: 'scroll',
 }
 
 const moodSlider = {
@@ -154,7 +155,7 @@ const ViewMoods = ({moodUrl}) => {
     } catch (error) {
         console.log(error)
     }
-    return (<div>
+    return (<div style={moodStyle}>
         Your Moods:
         {moods.map((mood) => (<ViewMood mood={mood} key={mood._id}/>))}
     </div>)

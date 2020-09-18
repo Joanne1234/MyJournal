@@ -74,7 +74,8 @@ function getPetInfo(pet) {
         level: pet.level,
         overallFoodIntake: pet.overallFoodIntake,
         foodRequiredToLevelUp: foodRequiredToLevelUp,
-        health: pet.health
+        health: pet.health,
+        born: pet.dateCreated
     }
     return petInfo
 }
