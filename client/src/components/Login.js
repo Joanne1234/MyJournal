@@ -14,10 +14,12 @@ import history from './history'
 
 const loginStyle = {
     alignContent: 'center',
+    alignItems: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid cornsilk",
+    backgroundColor: "cornsilk",
     alignSelf: 'center',
+    display:'flex',
 }
 
 async function submitLogin(postUrl, email, password) {
@@ -30,7 +32,7 @@ async function submitLogin(postUrl, email, password) {
     return (login)
 }
 
-const LoginForm= React.memo(({baseUrl, url}) => {
+const LoginForm= React.memo(({baseUrl, url, setLoggedIn}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [displayError, setDisplayError] = useState("none")
@@ -49,6 +51,7 @@ const LoginForm= React.memo(({baseUrl, url}) => {
         if (user && user["authToken"] && user["refreshToken"]) {
             setDisplayError("none")
             setError("")
+            setLoggedIn(true)
             sessionStorage.setItem('authToken', user["authToken"])
             sessionStorage.setItem('refreshToken', user["refreshToken"])
             return true

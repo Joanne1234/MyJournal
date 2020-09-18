@@ -20,19 +20,30 @@ const style = {
   position: 'absolute',
   padding: 10,
   display: 'flex',
-  justifyContent: 'center',
+  flexDirection:'column',
+  //justifyContent: 'center',
   opacity: 0.8,
+  overflow: 'scroll'
 }
+
+const header_style = {
+  alignContent:'center',
+  alignItems: 'center',
+  display:'flex',
+  flexDirection:'column'
+}
+
 function App() {
   return (
     <div 
       style={style}
     >
-      <h1>My Secret Garden</h1>
+      <h1 style={header_style}>My Secret Garden</h1>
+      <div>
       <BrowserRouter>
         <LoginHome url={url}/>
       </BrowserRouter>
-      
+      </div>
     </div>
   );
 }

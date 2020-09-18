@@ -17,8 +17,8 @@ const signUpStyle = {
     alignContent: 'center',
     margin: 5,
     padding: 5,
-    outline: "thick solid orange",
-    alignSelf: 'center',
+    backgroundColor: "orange",
+    alignSelf: 'center'
 }
 
 const reqStyle = {
