@@ -1,11 +1,11 @@
-import {
-    Link,
-    Route,
-    Switch,
-  } from 'react-router-dom';
-import React, { useEffect } from 'react';
-import { ViewPetSimple } from './Pet';
+import { Link, Route } from 'react-router-dom';
+import React from 'react';
 import Logout from './Logout';
+import { ViewMoods, MoodForm } from './Mood';
+import { ViewPet, ViewPetSimple } from './Pet';
+import {ViewReflections, ReflectionInput } from './Reflection';
+import {ViewJournals,JournalInput} from './Journal'
+import LoginHome from './LoginHome'
 
 const PetStyle = {
   margin: 20,
@@ -58,7 +58,11 @@ const DisplayStyle = {
   overflow: 'scroll'
 }
 
-const NavBar = ({url, setLoggedIn, pathname}) => {
+const ComponentStyle = {
+
+}
+
+const NavBar = ({url, setLoggedIn, pathname, setUserChange}) => {
   return (
     <div style={DisplayStyle}>
       <div style={NavStyle}>
@@ -72,6 +76,17 @@ const NavBar = ({url, setLoggedIn, pathname}) => {
         <Link to={{pathname: pathname+'/newmood'}} style={MoodStyle}>New Mood</Link>{' '}
         <Logout url={url} setLoggedIn={setLoggedIn}/>
       </div> 
+      <div style={ComponentStyle}>
+      <Route path={pathname+"/pet"} component={() => <ViewPetSimple petUrl={url+"pet"}/>}/>
+            <Route path={pathname+"/feedpet"} component={() => <ViewPet petUrl={url+"pet"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/journals"} component={() => <ViewJournals journalUrl={url+"journal"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/newjournal"} component={() => <JournalInput petUrl={url+"journal"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/reflections"} component={() => <ViewReflections reflectionUrl={url+"reflection"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/newreflection"} component={() => <ReflectionInput reflectionUrl={url+"reflection"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/moods"} component={() => <ViewMoods moodUrl={url+"moods"}/>}/>
+            <Route path={pathname+"/newmood"} component={() => <MoodForm moodUrl={url+"moods"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/login"} component={() => <LoginHome url={url}/>}/>
+      </div>
     </div>   
       
   )};

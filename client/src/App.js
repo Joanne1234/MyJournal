@@ -81,15 +81,6 @@ function App() {
           <Switch>
             <Route path="/login" component={() => <LoginForm url={url+"user/login"} setLoggedIn={setLoggedIn}/>}/>
             <Route path="/signup"component={() => <SignUpForm url={url+"user/signup"} setLoggedIn={setLoggedIn}/>}/>
-            <Route path={pathname+"/pet"} component={() => <ViewPetSimple petUrl={url+"pet"}/>}/>
-            <Route path={pathname+"/feedpet"} component={() => <ViewPet petUrl={url+"pet"} setUserChange={setUserChange}/>}/>
-            <Route path={pathname+"/journals"} component={() => <ViewJournals journalUrl={url+"journal"} setUserChange={setUserChange}/>}/>
-            <Route path={pathname+"/newjournal"} component={() => <JournalInput petUrl={url+"journal"} setUserChange={setUserChange}/>}/>
-            <Route path={pathname+"/reflections"} component={() => <ViewReflections reflectionUrl={url+"reflection"} setUserChange={setUserChange}/>}/>
-            <Route path={pathname+"/newreflection"} component={() => <ReflectionInput reflectionUrl={url+"reflection"} setUserChange={setUserChange}/>}/>
-            <Route path={pathname+"/moods"} component={() => <ViewMoods moodUrl={url+"moods"}/>}/>
-            <Route path={pathname+"/newmood"} component={() => <MoodForm moodUrl={url+"moods"} setUserChange={setUserChange}/>}/>
-            <Route path={pathname+"/login"} component={() => <LoginHome url={url}/>}/>
           </Switch>
         </div>
       </HashRouter>

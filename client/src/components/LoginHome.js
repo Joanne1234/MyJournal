@@ -1,9 +1,5 @@
-import {
-    Link,
-    Route,
-    Switch,
-  } from 'react-router-dom';
-import React, {useState, useEffect} from 'react';
+import { Link } from 'react-router-dom';
+import React from 'react';
 
 const CenterStyle = {
   alignItems:'center',
@@ -51,22 +47,6 @@ const CompStyle = {
     justifyContent:'center',
     display:'flex',
     flexDirection: 'column'
-}
-
-const ComponentStyle = {
-    display: 'flex',
-    flexDirection: 'column'
-}
-
-const LoggedInStyle = (loggedIn) => {
-    console.log("loggedin:", loggedIn)
-    var display = "none"
-    if (loggedIn === true) {
-        display = "block"
-    }
-  return ({
-        display: display
-    })
 }
 
 const LoginHome = ({url, display}) => {
