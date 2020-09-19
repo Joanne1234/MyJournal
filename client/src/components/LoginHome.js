@@ -1,5 +1,4 @@
 import {
-    BrowserRouter as Router,
     Link,
     Route,
     Switch,
@@ -8,9 +7,9 @@ import React, {useState, useEffect} from 'react';
 import SignUpForm from './Signup'
 import LoginForm from './Login'
 import { ViewMoods, MoodForm } from './Mood';
-import { ViewPet } from './Pet';
+import { ViewPet, ViewPetSimple } from './Pet';
 import {ViewReflections, ReflectionInput } from './Reflection';
-import {ViewJournals,ViewJournal,JournalInput} from './Journal'
+import {ViewJournals,JournalInput} from './Journal'
 import Home from './Home'
 
 const CenterStyle = {
@@ -21,7 +20,6 @@ const CenterStyle = {
 }
 
 const LoginHomeStyle = (display) => {
-  console.log("display,", display)
   if (!display) {
     display = "block"
   }
@@ -32,7 +30,8 @@ const LoginHomeStyle = (display) => {
     color: 'black',
     textDecoration: 'none',
     backgroundColor: "cornsilk",
-    outline: 'thin solid black'
+    outline: 'thin solid black',
+    display: display
   })
 }
 const SignUpHomeStyle = (display) => {
@@ -59,13 +58,25 @@ const CompStyle = {
     flexDirection: 'column'
 }
 
+const ComponentStyle = {
+  display: 'flex',
+  flexDirection: 'column'
+}
+
 const LoginHome = ({url}) => {
   const [display, setDisplay] = useState("block")
   const [loggedIn, setLoggedIn] = useState(false)
+  const [change, setUserChange] = useState(false)
+  const pathname='/home'
   useEffect(() => {
-    if (loggedIn == true) {
+    console.log("changed", change)
+  }, [change])
+  useEffect(() => {
+    if (loggedIn === true) {
       setDisplay("none")
-      console.log("loggedin...")
+
+    } else {
+      setDisplay("block")
     }
 }, [loggedIn])
   return (
@@ -74,11 +85,23 @@ const LoginHome = ({url}) => {
         <Link to={{pathname: '/login'}} style={LoginHomeStyle(display)}>Login</Link>{' '}
         <Link to={{pathname: '/signup'}} style={SignUpHomeStyle(display)}>Sign Up</Link>{' '}
       </div>
+      <div style={ComponentStyle}>
         <Switch>
             <Route path="/login" component={() => <LoginForm baseUrl={url} url={url+"user/login"} setLoggedIn={setLoggedIn}/>}/>
             <Route path="/signup"component={() => <SignUpForm baseUrl={url} url={url+"user/signup"} setLoggedIn={setLoggedIn}/>}/>
-            <Route exact path="/home" component={() => <Home url={url}/>}/>
+            <Route exact path="/home" component={() => <Home url={url} pathname="/home" setLoggedIn={setLoggedIn}/>}/>
+            <Route path={pathname+"/pet"} component={() => <ViewPetSimple petUrl={url+"pet"}/>}/>
+            <Route path={pathname+"/feedpet"} component={() => <ViewPet petUrl={url+"pet"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/journals"} component={() => <ViewJournals journalUrl={url+"journal"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/newjournal"} component={() => <JournalInput petUrl={url+"journal"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/reflections"} component={() => <ViewReflections reflectionUrl={url+"reflection"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/newreflection"} component={() => <ReflectionInput reflectionUrl={url+"reflection"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/moods"} component={() => <ViewMoods moodUrl={url+"moods"}/>}/>
+            <Route path={pathname+"/newmood"} component={() => <MoodForm moodUrl={url+"moods"} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/login"} component={() => <LoginHome url={url}/>}/>
         </Switch>
       </div>
+    </div>
+    
   )};
 export default LoginHome;

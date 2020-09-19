@@ -188,10 +188,10 @@ const ViewPetSimple = ({petUrl}) => {
     const [overallFoodIntake, setOverallFoodIntake] = useState(0)
     const [foodNextLevel, setFoodNextLevel] = useState(1)
     const [pet, setPet] = useState({})
-    const [reqData, setReqData] = useState("")
     try {
-        //  get pet info from backend API
-        async function getPet(url) {
+        useEffect(() => {
+           //  get pet info from backend API
+          async function getPet(url) {
             const pet = await getObject(url)
             if (!pet) {
                 return
@@ -204,11 +204,10 @@ const ViewPetSimple = ({petUrl}) => {
             setHealth(pet.health)
             setOverallFoodIntake(pet.overallFoodIntake)
             setFoodNextLevel(pet.overallFoodIntake + pet.foodRequiredToLevelUp)
-        }
-        useEffect(() => {
-            setPet({})
-            getPet(petUrl);
-        }, [reqData])
+          }  
+          setPet({})
+          getPet(petUrl);
+        }, [])
     } catch (error) {
         console.log(error)
     }

@@ -32,7 +32,7 @@ async function submitLogin(postUrl, email, password) {
     return (login)
 }
 
-const LoginForm= React.memo(({baseUrl, url, setLoggedIn}) => {
+const LoginForm = React.memo(({baseUrl, url, setLoggedIn}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [displayError, setDisplayError] = useState("none")
@@ -81,7 +81,6 @@ const LoginForm= React.memo(({baseUrl, url, setLoggedIn}) => {
           </p>
           <ErrorMessage display={displayError} msg={error}/>
           <div>
-          <Switch>
             <Link to={{pathname: '/home'}}>
             <button 
               onClick={async (e) => {
@@ -93,16 +92,18 @@ const LoginForm= React.memo(({baseUrl, url, setLoggedIn}) => {
                     console.log("not loggedin...", loggedIn)
                     return
                 }
+                setLoggedIn(true)
                 console.log("going home")
                 history.push('/home')
-                console.log("loggedin". loggedIn)
+                console.log("loggedin", loggedIn)
             }}
             > 
               Login
             </button>
             </Link>{' '}
+            <Switch>
               <Route exact path="/home" component={() => <Home url={baseUrl}/>}/>
-          </Switch>
+            </Switch>
           </div>
         </form>
       </div>

@@ -5,7 +5,6 @@ import {
 } from '../fetch/generalFetch';
 import ErrorMessage from './Error'
 import {
-  BrowserRouter as Router,
   Link,
   Route,
   Switch,
@@ -37,7 +36,7 @@ async function submitSignUp(postUrl, name, email, password) {
     return (signUp)
 }
 
-const SignUpForm= React.memo(({url}) => {
+const SignUpForm= React.memo(({baseUrl, url, setLoggedIn}) => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -76,7 +75,6 @@ const SignUpForm= React.memo(({url}) => {
             msg={error}
           />
           <div>
-            <Switch>
               <Link to={{pathname: '/home'}}>
                 <button 
                   onClick={async (e) => {
@@ -89,6 +87,7 @@ const SignUpForm= React.memo(({url}) => {
                       setError(user.msg)
                       return
                     }
+                    setLoggedIn(true)
                     setDisplayError("none")
                     sessionStorage.setItem('authToken', user["authToken"])
                     sessionStorage.setItem('refreshToken', user["refreshToken"])
@@ -98,7 +97,8 @@ const SignUpForm= React.memo(({url}) => {
                   Sign Up
                 </button>
                 </Link>
-                <Route path="/home" component={() => <Home baseUrl={url}/>}/>
+              <Switch>
+                <Route path="/home" component={() => <Home baseUrl={baseUrl}/>}/>
               </Switch>
             </div>
         </form>

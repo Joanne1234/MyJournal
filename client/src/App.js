@@ -1,15 +1,10 @@
 import React from 'react';
-import { MoodForm, ViewMoods } from './components/Mood'
-import { JournalInput, ViewJournals } from './components/Journal'
-import SignUpForm from './components/Signup'
-import LoginForm from './components/Login'
-import {ReflectionInput, ViewReflections} from './components/Reflection'
-import {ViewPet, ViewPetSimple} from './components/Pet'
 import background from './assets/StartingBackground.png';
-import Home from './components/Home'
 import LoginHome from './components/LoginHome'
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
+
 const url = "http://localhost:5000/api/"
+
 const style = {  
   backgroundImage: "url(" + background + ")",
   backgroundPosition: 'center',
@@ -35,14 +30,12 @@ const header_style = {
 
 function App() {
   return (
-    <div 
-      style={style}
-    >
+    <div style={style}>
       <h1 style={header_style}>My Secret Garden</h1>
       <div>
-      <BrowserRouter>
+      <HashRouter>
         <LoginHome url={url}/>
-      </BrowserRouter>
+      </HashRouter>
       </div>
     </div>
   );

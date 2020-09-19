@@ -9,7 +9,7 @@ const errorStyle = (display) => {
 }
 
 const ErrorMessage = ({msg, display}) => {
-    msg = msg.replace(/\"/g, "")
+    msg = msg.replace(/"/g, "")
     return (
       <div>
         <p style={errorStyle(display)}>{msg}</p>
