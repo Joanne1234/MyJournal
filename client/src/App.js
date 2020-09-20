@@ -1,15 +1,16 @@
-import React from 'react';
-import { MoodForm, ViewMoods } from './components/Mood'
-import { JournalInput, ViewJournals } from './components/Journal'
+import React, {useState, useEffect} from 'react';
+import background from './assets/StartingBackground.png';
+import LoginHome from './components/LoginHome'
+import { HashRouter, Switch, Route } from 'react-router-dom';
 import SignUpForm from './components/Signup'
 import LoginForm from './components/Login'
-import {ReflectionInput, ViewReflections} from './components/Reflection'
-import {ViewPet, ViewPetSimple} from './components/Pet'
-import background from './assets/StartingBackground.png';
-import Home from './components/Home'
-import LoginHome from './components/LoginHome'
-import { BrowserRouter } from 'react-router-dom';
+import { ViewMoods, MoodForm } from './components/Mood';
+import { ViewPet, ViewPetSimple } from './components/Pet';
+import {ViewReflections, ReflectionInput } from './components/Reflection';
+import {ViewJournals,JournalInput} from './components/Journal'
+import NavBar from './components/NavBar'
 const url = "http://localhost:5000/api/"
+
 const style = {  
   backgroundImage: "url(" + background + ")",
   backgroundPosition: 'center',
@@ -21,7 +22,6 @@ const style = {
   padding: 10,
   display: 'flex',
   flexDirection:'column',
-  //justifyContent: 'center',
   opacity: 0.8,
   overflow: 'scroll'
 }
@@ -33,16 +33,57 @@ const header_style = {
   flexDirection:'column'
 }
 
+const columnStyle = {
+    display: 'flex',
+    flexDirection:'column'
+}
+
+const unauthorisedStyle = (loggedIn) => {
+    var display = "block"
+    if (loggedIn === true) {
+        display = "none"
+    }
+    return {
+        display: display,
+    }
+}
+
+const authorisedStyle = (loggedIn) => {
+  var display = "none"
+  if (loggedIn === true) {
+      display = "block"
+  }
+  return {
+      display: display,
+  }
+}
+
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [change, setUserChange] = useState(false)
+  const pathname='/home'
+  useEffect(() => {
+    console.log("changed", change)
+  }, [change])
+  //          <Route exact path={pathname} component={() => <NavBar url={url} pathname="/home" setLoggedIn={setLoggedIn}/>}/>
   return (
-    <div 
-      style={style}
-    >
+    <div style={style}>
       <h1 style={header_style}>My Secret Garden</h1>
       <div>
-      <BrowserRouter>
-        <LoginHome url={url}/>
-      </BrowserRouter>
+      <HashRouter>
+        <div style={unauthorisedStyle(loggedIn)}>
+          <LoginHome url={url} loggedInPath="/home/pet"/>
+        </div>
+        <div style={authorisedStyle(loggedIn)}>
+          <NavBar url={url} pathname="/home" setLoggedIn={setLoggedIn} loggedIn={loggedIn}/>
+        </div>
+        <div style={columnStyle}>
+          <Switch>
+            <Route path="/login" component={() => <LoginForm url={url+"user/login"} setLoggedIn={setLoggedIn}/>}/>
+            <Route path="/signup"component={() => <SignUpForm url={url+"user/signup"} setLoggedIn={setLoggedIn}/>}/>
+          </Switch>
+        </div>
+      </HashRouter>
       </div>
     </div>
   );

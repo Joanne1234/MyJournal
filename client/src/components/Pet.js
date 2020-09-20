@@ -89,7 +89,7 @@ const PetNameInput = ({petUrl, name, setName, setChange}) => {
     )
 }
 
-const ViewPet = ({petUrl}) => {
+const ViewPet = ({petUrl, setUserChange}) => {
     const [status, setStatus] = useState(0)
     const [name, setName] = useState("Rocky")
     const [level, setLevel] = useState(0)
@@ -151,6 +151,8 @@ const ViewPet = ({petUrl}) => {
             onClick={async (e) => {
                 e.preventDefault()
                 submitPetName(petUrl, newName, setReqData)
+                const random = Math.random().toString(36).substring(2, 15)
+                setUserChange(random)
             }}
           > 
             Change name 
@@ -171,6 +173,8 @@ const ViewPet = ({petUrl}) => {
               onClick={async (e) => {
                 e.preventDefault()
                 submitPetFood(petUrl, feed, setReqData)
+                const random = Math.random().toString(36).substring(2, 15)
+                setUserChange(random)
               }}
             > 
               Feed
@@ -188,10 +192,10 @@ const ViewPetSimple = ({petUrl}) => {
     const [overallFoodIntake, setOverallFoodIntake] = useState(0)
     const [foodNextLevel, setFoodNextLevel] = useState(1)
     const [pet, setPet] = useState({})
-    const [reqData, setReqData] = useState("")
     try {
-        //  get pet info from backend API
-        async function getPet(url) {
+        useEffect(() => {
+           //  get pet info from backend API
+          async function getPet(url) {
             const pet = await getObject(url)
             if (!pet) {
                 return
@@ -204,11 +208,10 @@ const ViewPetSimple = ({petUrl}) => {
             setHealth(pet.health)
             setOverallFoodIntake(pet.overallFoodIntake)
             setFoodNextLevel(pet.overallFoodIntake + pet.foodRequiredToLevelUp)
-        }
-        useEffect(() => {
-            setPet({})
-            getPet(petUrl);
-        }, [reqData])
+          }  
+          setPet({})
+          getPet(petUrl);
+        }, [])
     } catch (error) {
         console.log(error)
     }
