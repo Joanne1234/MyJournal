@@ -11,7 +11,7 @@ const moodStyle = {
     alignContent: 'center',
     margin: 10,
     padding: 5,
-    outline: "thick solid paleturquoise",
+    outline: "thick solid white",
     backgroundColor: "paleturquoise",
     overflow: 'scroll',
 }
@@ -119,7 +119,7 @@ const ViewMood = ({mood}) => {
     }
     const date = mood.dateCreated
     const scale = mood.scale
-    const des = mood.description
+    const des = mood.comments
     const id = mood._id
     /*
     const parent = mood.parent.id

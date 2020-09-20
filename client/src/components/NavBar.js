@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Logout from './Logout';
 import { ViewMoods, MoodForm } from './Mood';
 import { ViewPet, ViewPetSimple } from './Pet';
-import {ViewReflections, ReflectionInput } from './Reflection';
+import {ViewReflections, ReflectionInput, ViewReflection } from './Reflection';
 import {ViewJournals, ViewJournal, JournalInput} from './Journal'
 import LoginHome from './LoginHome'
 import { getObject } from '../fetch/generalFetch';
@@ -65,16 +65,33 @@ const BoxStyle = {
   alignContent: 'center'
 }
 
+const TitleStyle = {
+    textAlign: 'center'
+}
+
 const ComponentStyle = {
 
+}
+
+const QuoteStyle = (quote) => {
+    var display = 'none'
+    if (quote === true) {
+        display = 'block'
+    } 
+    return ({
+        display: display
+    })
 }
 
 const NavBar = ({url, setLoggedIn, pathname, loggedIn}) => {
     const [name, setName] = useState("")
     const [points, setPoints] = useState(0)
     const [change, setUserChange] = useState("")
-    console.log(url, pathname)
+    const [quote, setQuote] = useState("")
+    const [author, setAuthor] = useState("")
+    const [quoteAvailable, setQuoteAvailable] = useState(false)
     useEffect(() => {
+        console.log(change)  
         try {
             async function getUserDetails() {
                 const user = await getObject(url+"user")  
@@ -84,18 +101,34 @@ const NavBar = ({url, setLoggedIn, pathname, loggedIn}) => {
                     setPoints(user.remainingPoints)
                 }
             }
+            /*async function getQuote() {
+                const res = await getObject("https://quotes.rest/qod?category=inspire&language=en")
+                if (res && res.contents && res.contents.quotes && res.contents.quotes.length() > 0) {
+                    setQuoteAvailable(true)
+                    setQuote(res.contents.quotes[0].quote)
+                    setAuthor(res.contents.quotes[0].author)
+                }
+            }
+            setQuote("")
+            setAuthor("")
+            setQuoteAvailable(false)*/
             setName("")
             setPoints(0)
             getUserDetails()
+            //getQuote()
         } catch (err) {
             console.log("error:", err)
         }    
     }, [loggedIn, change])
     return (
       <div style={BoxStyle}>
-      <div style={BoxStyle}>
-          <p>Welcome back {name}!</p>
-          <p>Remaining points: {points}</p>
+      <div style={BoxStyle, TitleStyle}>
+        <p>Welcome back {name}!</p>
+        <p>Remaining points: {points}</p>
+        <div style={QuoteStyle(quoteAvailable)}>
+          <p>Your quote of the day: {quote}</p>
+          <p>By {author}</p>
+          </div>
       </div>
       <div style={DisplayStyle}>
         <div style={NavStyle}>
@@ -114,9 +147,12 @@ const NavBar = ({url, setLoggedIn, pathname, loggedIn}) => {
           <Route path={pathname+"/feedpet"} component={() => <ViewPet petUrl={url+"pet"} setUserChange={setUserChange}/>}/>
           <Route exact path={pathname+"/journals"} component={() => <ViewJournals journalUrl={url+"journal"} setUserChange={setUserChange}/>}/>
           <Route exact path={pathname+"/journals/:journalId"} component={() => <ViewJournal journalUrl={url+"journal"} setUserChange={setUserChange}/>}/>
+          <Route path={pathname+"/journals/:journalId/edit"} component={() => <JournalInput journalUrl={url+"journal"} setUserChange={setUserChange}/>}/>
           <Route path={pathname+"/newjournal"} component={() => <JournalInput journalUrl={url+"journal"} setUserChange={setUserChange}/>}/>
-          <Route path={pathname+"/reflections"} component={() => <ViewReflections reflectionUrl={url+"reflection"} setUserChange={setUserChange}/>}/>
+          <Route exact path={pathname+"/reflections"} component={() => <ViewReflections reflectionUrl={url+"reflection"} setUserChange={setUserChange}/>}/>
           <Route path={pathname+"/newreflection"} component={() => <ReflectionInput reflectionUrl={url+"reflection"} setUserChange={setUserChange}/>}/>
+          <Route exact path={pathname+"/reflections/:reflectionId"} component={() => <ViewReflection reflectionUrl={url+"reflection"}setUserChange={setUserChange}/>}/>
+          <Route exact path={pathname+"/reflections/:reflectionId/edit"} component={() => <ReflectionInput reflectionUrl={url+"reflection"} setUserChange={setUserChange}/>}/>
           <Route path={pathname+"/moods"} component={() => <ViewMoods moodUrl={url+"moods"}/>}/>
           <Route path={pathname+"/newmood"} component={() => <MoodForm moodUrl={url+"moods"} setUserChange={setUserChange}/>}/>
           <Route path={pathname+"/login"} component={() => <LoginHome url={url}/>}/>

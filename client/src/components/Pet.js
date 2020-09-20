@@ -151,7 +151,8 @@ const ViewPet = ({petUrl, setUserChange}) => {
             onClick={async (e) => {
                 e.preventDefault()
                 submitPetName(petUrl, newName, setReqData)
-                setUserChange(Math.random.toString(36))
+                const random = Math.random().toString(36).substring(2, 15)
+                setUserChange(random)
             }}
           > 
             Change name 
@@ -172,7 +173,8 @@ const ViewPet = ({petUrl, setUserChange}) => {
               onClick={async (e) => {
                 e.preventDefault()
                 submitPetFood(petUrl, feed, setReqData)
-                setUserChange(Math.random.toString(36))
+                const random = Math.random().toString(36).substring(2, 15)
+                setUserChange(random)
               }}
             > 
               Feed

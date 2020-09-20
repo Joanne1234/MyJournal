@@ -9,7 +9,7 @@ import { MoodInput } from './Mood';
 import ErrorMessage from './Error'
 import history from './history'
 
-import {Link, Switch, Route, useLocation, useParams} from 'react-router-dom'
+import {Link, Route, useLocation, useParams} from 'react-router-dom'
 
 const journalStyle = {
     alignContent: 'center',
@@ -27,6 +27,7 @@ const textBoxStyle = {
 
 async function submitJournal(postUrl, id, title, entry, positives, scale, comments) {
     console.log("patchjournal...", title, entry, positives, scale)
+    console.log("id...", id)
     const newEntryDetails = {
         title: title,
         entry: entry,
@@ -36,7 +37,8 @@ async function submitJournal(postUrl, id, title, entry, positives, scale, commen
     }
     var newPost = null
     if (id != null) {
-        postUrl+= "/" + id
+      console.log("patching.....")  
+      postUrl+= "/" + id
         newPost = await patch(postUrl, newEntryDetails)
     } else {
         newPost = await makeNewPost(postUrl, newEntryDetails)
@@ -48,7 +50,6 @@ async function submitJournal(postUrl, id, title, entry, positives, scale, commen
     return id
 }
 async function deleteJournal(url, id, setChange) {
-    console.log("deletejournal...", url, id, setChange)
     if (id != null) {
         url+= "/" + id
         const result = await deleteObject(url)
@@ -62,7 +63,6 @@ async function deleteJournal(url, id, setChange) {
     return []
 }
 const JournalInput = React.memo(({journalUrl, journal, setUserChange}) => {
-    console.log("Journal input////")
     const [title, setTitle] = useState("")
     const [entry, setEntry] = useState("")
     const [positives, setPositives] = useState("")
@@ -79,6 +79,7 @@ const JournalInput = React.memo(({journalUrl, journal, setUserChange}) => {
         setMood(journal.mood.scale)
         setCom(journal.mood.comments)
         setPositives(journal.positives)
+        setID(journalId)
     }
     try {
         async function getJournal() {
@@ -90,12 +91,12 @@ const JournalInput = React.memo(({journalUrl, journal, setUserChange}) => {
             if (journal && journal.msg) {
                 return
             }
-            console.log("journal...")
             setTitle(journal.title)
             setMood(journal.mood.scale)
             setCom(journal.mood.comments)
             setEntry(journal.entry)
             setPositives(journal.positives)
+            setID(journalId)
         }
         useEffect(()=> {
             getJournal()
@@ -162,6 +163,7 @@ const JournalInput = React.memo(({journalUrl, journal, setUserChange}) => {
                 setID(newID)
                 const random = Math.random().toString(36).substring(2, 15)
                 setUserChange(random)
+                history.push('/home/journals/')
             }}
           > 
             Save 
@@ -170,10 +172,12 @@ const JournalInput = React.memo(({journalUrl, journal, setUserChange}) => {
             title = "Back"
             onClick={async (e) => {
                 e.preventDefault()
+                history.goBack()
             }}
           > 
             Back 
           </button>
+          <Route exact path={"/home/journals"} component={() => <ViewJournals journalUrl={journalUrl} setUserChange={setUserChange}/>}/>
         </form>
       </div>
     );
@@ -181,7 +185,8 @@ const JournalInput = React.memo(({journalUrl, journal, setUserChange}) => {
 
 const ViewJournal = ({journalUrl, journal, setChange, setUserChange}) => {
     const params = useParams()
-    const pathname = useLocation().pathname
+    const path = useLocation().pathname
+    const pathname = path.replace(/\/$/, '')
     const journalId = params.journalId
     const [date, setDate] = useState(Date.now())
     const [title, setTitle] = useState("")
@@ -199,20 +204,24 @@ const ViewJournal = ({journalUrl, journal, setChange, setUserChange}) => {
     }
     try {
         async function getJournal() {
-            const journal = await getObject(journalUrl+"/"+journalId)
-            if (journal && journal.msg) {
+            const journalObject = await getObject(journalUrl+"/"+journalId)
+            if (journalObject && journalObject.msg) {
                 return null
             }
-            setDate(journal.dateCreated)
-            setTitle(journal.title)
-            setMood(journal.mood.scale)
-            setComm(journal.mood.comments)
-            setEntry(journal.entry)
-            setPositives(journal.positives)
+            console.log(journalObject)
+            setDate(journalObject.dateCreated)
+            setTitle(journalObject.title)
+            setMood(journalObject.mood.scale)
+            setComm(journalObject.mood.comments)
+            setEntry(journalObject.entry)
+            setPositives(journalObject.positives)
         }
         useEffect(()=> {
             getJournal()
         })
+        if (!journalId) {
+            return false
+        }
     } catch (err) {
         console.log(err)
         return null
@@ -225,7 +234,7 @@ const ViewJournal = ({journalUrl, journal, setChange, setUserChange}) => {
           <p>Comments: {comm}</p>
           <p>Entry: {entry}</p>
           <p>Positives: {positives}</p>
-          <Link to={{pathname: pathname+'/edit/'+journalId}}>
+          <Link to={{pathname: pathname+'/edit'}}>
             <button 
               title = "Edit"
             > 
@@ -242,22 +251,20 @@ const ViewJournal = ({journalUrl, journal, setChange, setUserChange}) => {
           > 
             Delete 
           </button>
-          <Switch>
-            <Route path={pathname+"/edit/:journalId"} component={() => <JournalInput journalUrl={journalUrl} journal={journal} setChange={setChange} setUserChange={setUserChange}/>}/>
-          </Switch>
+          <Route path={pathname+"/edit"} component={() => <JournalInput journalUrl={journalUrl} journal={journal} setChange={setChange} setUserChange={setUserChange}/>}/>
       </div>)
 }
 
 const ViewJournalSimple = ({journalUrl, journal, setChange, setUserChange}) => {
-    const pathname = useLocation().pathname
-    console.log("pathname:", pathname)
+    const path = useLocation().pathname
+    const pathname = path.replace(/\/$/, '')
     const date = journal.dateCreated
     const title = journal.title
     const mood = journal.mood.scale
     const id = journal._id
     if (!journal) {
         history.push('/home')
-        return
+        return null
     }
     return (
       <div 
@@ -273,7 +280,7 @@ const ViewJournalSimple = ({journalUrl, journal, setChange, setUserChange}) => {
               View
             </button>
           </Link>{' '}
-          <Link to={{pathname: pathname+'/edit/'+id}}>
+          <Link to={{pathname: pathname+'/'+id+'/edit'}}>
             <button 
               title = "Edit"
             > 
@@ -289,10 +296,8 @@ const ViewJournalSimple = ({journalUrl, journal, setChange, setUserChange}) => {
           > 
             Delete 
           </button>
-          <Switch>
-            <Route path={pathname+"/:journalId"} component={() => <ViewJournal journalUrl={journalUrl} journal={journal} setChange={setChange} setUserChange={setUserChange}/>}/>
-            <Route path={pathname+"/edit/:journalId"} component={() => <JournalInput journalUrl={journalUrl} journal={journal} setUserChange={setUserChange}/>}/>
-          </Switch>
+            <Route exact path={pathname+"/:journalId"} component={() => <ViewJournal journalUrl={journalUrl} journal={journal} setChange={setChange} setUserChange={setUserChange}/>}/>
+            <Route path={pathname+"/:journalId/edit"} component={() => <JournalInput journalUrl={journalUrl} journal={journal} setChange={setChange} setUserChange={setUserChange}/>}/>
       </div>)
 }
 
