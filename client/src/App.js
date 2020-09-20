@@ -75,7 +75,7 @@ function App() {
           <LoginHome url={url} loggedInPath="/home/pet"/>
         </div>
         <div style={authorisedStyle(loggedIn)}>
-          <NavBar url={url} pathname="/home" setLoggedIn={setLoggedIn}/>
+          <NavBar url={url} pathname="/home" setLoggedIn={setLoggedIn} loggedIn={loggedIn}/>
         </div>
         <div style={columnStyle}>
           <Switch>

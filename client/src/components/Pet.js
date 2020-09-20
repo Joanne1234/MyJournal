@@ -89,7 +89,7 @@ const PetNameInput = ({petUrl, name, setName, setChange}) => {
     )
 }
 
-const ViewPet = ({petUrl}) => {
+const ViewPet = ({petUrl, setUserChange}) => {
     const [status, setStatus] = useState(0)
     const [name, setName] = useState("Rocky")
     const [level, setLevel] = useState(0)
@@ -151,6 +151,7 @@ const ViewPet = ({petUrl}) => {
             onClick={async (e) => {
                 e.preventDefault()
                 submitPetName(petUrl, newName, setReqData)
+                setUserChange(Math.random.toString(36))
             }}
           > 
             Change name 
@@ -171,6 +172,7 @@ const ViewPet = ({petUrl}) => {
               onClick={async (e) => {
                 e.preventDefault()
                 submitPetFood(petUrl, feed, setReqData)
+                setUserChange(Math.random.toString(36))
               }}
             > 
               Feed

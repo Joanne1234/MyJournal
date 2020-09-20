@@ -28,10 +28,6 @@ async function submitReflection(postUrl, id,
     comB, comD, comA, 
     eva, ana, act, con) {
     
-    console.log("patchjournal...", id, event, des, learnt, 
-    scaleB, scaleD, scaleA, 
-    comB, comD, comA, 
-    eva, ana, act, con)
     var extended = false;
     if (eva !== "" || ana !== "" || act !== "" || con !== "") {
         extended = true
@@ -60,7 +56,6 @@ async function submitReflection(postUrl, id,
     } else {
         newPost = await makeNewPost(postUrl, newEntryDetails)
     }
-    console.log(newPost)
     // error
     if (newPost && newPost.msg) {
         return newPost
@@ -70,7 +65,6 @@ async function submitReflection(postUrl, id,
     return id
 }
 async function deleteReflection(url, id, setChange) {
-    console.log("deletereflection...", url, id)
     if (id != null) {
         url+= "/" + id
         const result = await deleteObject(url)
@@ -82,7 +76,7 @@ async function deleteReflection(url, id, setChange) {
     return []
 }
 
-const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
+const ReflectionInput = React.memo(({reflectionUrl, reflection, setUserChange}) => {
     // set variables (reflection input)
     const [event, setEvent] = useState("")
     const [des, setDes] = useState("")
@@ -231,7 +225,8 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
                 setDisplayError("none")
                 setError("")
                 setID(newID)
-                console.log("newID", newID)
+                const random = Math.random().toString(36).substring(2, 15)
+                setUserChange(random)
             }}
           > 
             Save 
@@ -249,7 +244,7 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
     );
 })
 
-const ViewReflection = ({reflectionUrl, reflection, setChange}) => {
+const ViewReflection = ({reflectionUrl, reflection, setChange, setUserChange}) => {
     if (!reflection) {
         return
     }
@@ -304,7 +299,7 @@ const ViewReflection = ({reflectionUrl, reflection, setChange}) => {
       </div>)
 }
 
-const ViewReflectionSimple = ({reflectionUrl, reflection, setChange}) => {
+const ViewReflectionSimple = ({reflectionUrl, reflection, setChange, setUserChange}) => {
     if (!reflection) {
         return
     }
@@ -345,7 +340,7 @@ const ViewReflectionSimple = ({reflectionUrl, reflection, setChange}) => {
       </div>)
 }
 
-const ViewReflections = ({reflectionUrl}) => {
+const ViewReflections = ({reflectionUrl, setUserChange}) => {
     const [reflections, setReflections] = useState([])
     const [reqData, setReqData] = useState("")
     try {
@@ -356,10 +351,8 @@ const ViewReflections = ({reflectionUrl}) => {
             setReflections(reflections)
         }
         useEffect(() => {
-            console.log("get Reflections...")
             setReflections([])
             getReflections(reflectionUrl);
-            console.log("new refs", reflections)
         }, [reqData])
     } catch (error) {
         console.log(error)
@@ -373,6 +366,7 @@ const ViewReflections = ({reflectionUrl}) => {
             setReflections={setReflections}
             setChange={setReqData}
             key={reflection._id}
+            setUserChange={setUserChange}
           />))}
     </div>)
 }
