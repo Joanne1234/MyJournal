@@ -26,6 +26,8 @@ const textBoxStyle = {
 }
 
 async function submitJournal(postUrl, id, title, entry, positives, scale, comments) {
+    console.log("patchjournal...", title, entry, positives, scale)
+    console.log("id...", id)
     const newEntryDetails = {
         title: title,
         entry: entry,
@@ -35,6 +37,7 @@ async function submitJournal(postUrl, id, title, entry, positives, scale, commen
     }
     var newPost = null
     if (id != null) {
+      console.log("patching.....")  
       postUrl+= "/" + id
         newPost = await patch(postUrl, newEntryDetails)
     } else {
@@ -83,6 +86,7 @@ const JournalInput = React.memo(({journalUrl, journal, setUserChange}) => {
             if (!journalId) {
                 return
             }
+            console.log(journalId)
             const journal = await getObject(journalUrl+"/"+journalId)
             if (journal && journal.msg) {
                 return
@@ -204,6 +208,7 @@ const ViewJournal = ({journalUrl, journal, setChange, setUserChange}) => {
             if (journalObject && journalObject.msg) {
                 return null
             }
+            console.log(journalObject)
             setDate(journalObject.dateCreated)
             setTitle(journalObject.title)
             setMood(journalObject.mood.scale)

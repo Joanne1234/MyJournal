@@ -20,6 +20,7 @@ const loginStyle = {
 }
 
 async function submitLogin(postUrl, email, password) {
+    console.log("patchjournal...",email, password)
     const loginDetails = {
         email: email,
         password: password
@@ -37,6 +38,7 @@ const LoginForm = React.memo(({url, setLoggedIn}) => {
       const user = await submitLogin(url, email, password)
         // invalid login details
         if (user && user.msg) {
+            console.log("login failed")
             setDisplayError("block")
             setError(user.msg)
             return false
@@ -79,6 +81,7 @@ const LoginForm = React.memo(({url, setLoggedIn}) => {
               onClick={async (e) => {
                 e.preventDefault()
                 const loggedIn = await login()
+                console.log("loggin:", loggedIn)
                 if (!loggedIn) {
                     return
                 }
