@@ -5,7 +5,7 @@ import { HashRouter, Switch, Route } from 'react-router-dom';
 import SignUpForm from './components/Signup'
 import LoginForm from './components/Login'
 import NavBar from './components/NavBar'
-const url = process.env.REACT_APP_API_URL || "http://localhost:5000/api/"
+const url = process.env.API_URL || "http://localhost:5000/api/"
 const style = {  
   backgroundImage: "url(" + background + ")",
   backgroundPosition: 'center',
@@ -55,6 +55,8 @@ const authorisedStyle = (loggedIn) => {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false)
+  console.log(url)
+  console.log(process.env.API_URL)
   const pathname='/home'
   //          <Route exact path={pathname} component={() => <NavBar url={url} pathname="/home" setLoggedIn={setLoggedIn}/>}/>
   return (
