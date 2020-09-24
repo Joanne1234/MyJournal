@@ -6,6 +6,7 @@ import {
     patch, 
     getObject
 } from '../fetch/generalFetch';
+import history from './history'
 
 const moodStyle = {
     alignContent: 'center',
@@ -21,7 +22,6 @@ const moodSlider = {
 }
 
 async function submitMood(postUrl, id, scale, comments) {
-    console.log("patchmood...", scale, comments, id)
     const newMood = {
         mood: scale,
         comments: comments
@@ -31,11 +31,9 @@ async function submitMood(postUrl, id, scale, comments) {
         postUrl+= "/" + id
         newPost = await patch(postUrl, newMood)
     } else {
-      console.log("new post...", postUrl, newMood)  
       newPost = await makeNewPost(postUrl, newMood)
     }
     if (newPost) {
-        console.log(newPost)
         id = newPost._id
         return id
     }
@@ -58,13 +56,14 @@ const MoodForm = React.memo(({moodUrl, setUserChange}) => {
         />
         <p/>
         <button 
-          title = "Done"
+          title = "Save"
           onClick={async (e) => {
               e.preventDefault()
               const newID = await submitMood(moodUrl, id, scale, com)
               setID(newID)
               const random = Math.random().toString(36).substring(2, 15)
               setUserChange(random)
+              history.push('/home/moods')
           }}
         > 
           Save 
@@ -72,7 +71,7 @@ const MoodForm = React.memo(({moodUrl, setUserChange}) => {
         <button 
             title = "Back"
             onClick={async (e) => {
-                e.preventDefault()
+                history.goBack()
             }}
           > 
             Back 

@@ -91,12 +91,10 @@ const NavBar = ({url, setLoggedIn, pathname, loggedIn}) => {
     const [author, setAuthor] = useState("")
     const [quoteAvailable, setQuoteAvailable] = useState(false)
     useEffect(() => {
-        console.log(change)  
         try {
             async function getUserDetails() {
                 const user = await getObject(url+"user")  
-                console.log(user)
-                if (user.name && user.remainingPoints) {
+                if (user.name != null && user.remainingPoints != null) {
                     setName(user.name)
                     setPoints(user.remainingPoints)
                 }
