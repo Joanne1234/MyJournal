@@ -10,6 +10,7 @@ Backend: [Node JS](https://nodejs.org/en/), [Mongodb Atlas](https://www.mongodb.
 ### Documentation
 API documentation for the backend can be found [here](https://app.swaggerhub.com/apis-docs/Joanne1/MySecretGarden/1.0.0).
 
+
 ## Installing and running locally
 ### Prerequisites
 - [Node JS](https://nodejs.org/en/) installed locally
@@ -35,11 +36,12 @@ touch .env
 ```
 In the .env file: 
 ```
-DB_CONNECTION={YourMongdbAtlasConnection} 
+DB_CONNECTION={YourMongoDBAtlasConnection} 
 ACCESS_TOKEN_SECRET={SomethingSuperSecret} 
 ACCESS_REFRESH_TOKEN={SomethingSuperSecret}
 ```
 You are recommended to use Node's crypto library to generate the access tokens:
+
 ```> require('crypto').randomBytes(64).toString('hex')```
 
 ### Running the web app

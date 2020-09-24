@@ -2,11 +2,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 var cors = require('cors')
-var path = require('path');
+
 // Functions
 const app = express();
 app.use(cors())
-app.use(express.static(path.join(__dirname, 'build')));
 const port = process.env.PORT || 5000
 const CONNECTION_URI = process.env.DB_CONNECTION
 

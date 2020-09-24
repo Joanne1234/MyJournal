@@ -1,12 +1,15 @@
 import React, {useState} from 'react';
 import {
-  Link
+  Link,
+  Route,
+  Switch,
 } from 'react-router-dom';
 import 'rc-slider/assets/index.css';
 import { 
     makeNewPost
 } from '../fetch/generalFetch';
 import ErrorMessage from './Error'
+import Home from './Home'
 import history from './history'
 
 const loginStyle = {
@@ -29,13 +32,15 @@ async function submitLogin(postUrl, email, password) {
     return (login)
 }
 
-const LoginForm = React.memo(({url, setLoggedIn}) => {
+const LoginForm= React.memo(({baseUrl, url, setLoggedIn}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [displayError, setDisplayError] = useState("none")
     const [error, setError] = useState("")
     async function login() {
       const user = await submitLogin(url, email, password)
+        console.log("user:")
+        console.log(user)
         // invalid login details
         if (user && user.msg) {
             console.log("login failed")
@@ -76,22 +81,28 @@ const LoginForm = React.memo(({url, setLoggedIn}) => {
           </p>
           <ErrorMessage display={displayError} msg={error}/>
           <div>
-            <Link to={{pathname: '/home/pet'}}>
+          <Switch>
+            <Link to={{pathname: '/home'}}>
             <button 
               onClick={async (e) => {
+                console.log("button clicked")
                 e.preventDefault()
                 const loggedIn = await login()
                 console.log("loggin:", loggedIn)
                 if (!loggedIn) {
+                    console.log("not loggedin...", loggedIn)
                     return
                 }
-                setLoggedIn(true)
-                history.push('/home/pet')
+                console.log("going home")
+                history.push('/home')
+                console.log("loggedin". loggedIn)
             }}
             > 
               Login
             </button>
             </Link>{' '}
+              <Route exact path="/home" component={() => <Home url={baseUrl}/>}/>
+          </Switch>
           </div>
         </form>
       </div>

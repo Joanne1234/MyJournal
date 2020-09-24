@@ -89,7 +89,7 @@ const PetNameInput = ({petUrl, name, setName, setChange}) => {
     )
 }
 
-const ViewPet = ({petUrl, setUserChange}) => {
+const ViewPet = ({petUrl}) => {
     const [status, setStatus] = useState(0)
     const [name, setName] = useState("Rocky")
     const [level, setLevel] = useState(0)
@@ -151,8 +151,6 @@ const ViewPet = ({petUrl, setUserChange}) => {
             onClick={async (e) => {
                 e.preventDefault()
                 submitPetName(petUrl, newName, setReqData)
-                const random = Math.random().toString(36).substring(2, 15)
-                setUserChange(random)
             }}
           > 
             Change name 
@@ -173,8 +171,6 @@ const ViewPet = ({petUrl, setUserChange}) => {
               onClick={async (e) => {
                 e.preventDefault()
                 submitPetFood(petUrl, feed, setReqData)
-                const random = Math.random().toString(36).substring(2, 15)
-                setUserChange(random)
               }}
             > 
               Feed
@@ -192,10 +188,10 @@ const ViewPetSimple = ({petUrl}) => {
     const [overallFoodIntake, setOverallFoodIntake] = useState(0)
     const [foodNextLevel, setFoodNextLevel] = useState(1)
     const [pet, setPet] = useState({})
+    const [reqData, setReqData] = useState("")
     try {
-        useEffect(() => {
-           //  get pet info from backend API
-          async function getPet(url) {
+        //  get pet info from backend API
+        async function getPet(url) {
             const pet = await getObject(url)
             if (!pet) {
                 return
@@ -208,10 +204,11 @@ const ViewPetSimple = ({petUrl}) => {
             setHealth(pet.health)
             setOverallFoodIntake(pet.overallFoodIntake)
             setFoodNextLevel(pet.overallFoodIntake + pet.foodRequiredToLevelUp)
-          }  
-          setPet({})
-          getPet(petUrl);
-        }, [])
+        }
+        useEffect(() => {
+            setPet({})
+            getPet(petUrl);
+        }, [reqData])
     } catch (error) {
         console.log(error)
     }

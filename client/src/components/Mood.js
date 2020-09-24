@@ -11,7 +11,7 @@ const moodStyle = {
     alignContent: 'center',
     margin: 10,
     padding: 5,
-    outline: "thick solid white",
+    outline: "thick solid paleturquoise",
     backgroundColor: "paleturquoise",
     overflow: 'scroll',
 }
@@ -42,7 +42,7 @@ async function submitMood(postUrl, id, scale, comments) {
 }
 
 // wrapper around mood input section
-const MoodForm = React.memo(({moodUrl, setUserChange}) => {
+const MoodForm = React.memo(({moodUrl}) => {
   const [scale, setScale] = useState(0)
   const [com, setCom] = useState("")
   const [id, setID] = useState(null)
@@ -63,8 +63,7 @@ const MoodForm = React.memo(({moodUrl, setUserChange}) => {
               e.preventDefault()
               const newID = await submitMood(moodUrl, id, scale, com)
               setID(newID)
-              const random = Math.random().toString(36).substring(2, 15)
-              setUserChange(random)
+              console.log("newID", newID)
           }}
         > 
           Save 
@@ -119,7 +118,7 @@ const ViewMood = ({mood}) => {
     }
     const date = mood.dateCreated
     const scale = mood.scale
-    const des = mood.comments
+    const des = mood.description
     const id = mood._id
     /*
     const parent = mood.parent.id
