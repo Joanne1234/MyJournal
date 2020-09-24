@@ -55,8 +55,6 @@ const authorisedStyle = (loggedIn) => {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false)
-  console.log(url)
-  console.log(process.env.API_URL)
   const pathname='/home'
   //          <Route exact path={pathname} component={() => <NavBar url={url} pathname="/home" setLoggedIn={setLoggedIn}/>}/>
   return (
