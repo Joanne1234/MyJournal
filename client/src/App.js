@@ -1,15 +1,8 @@
 import React from 'react';
-import { MoodForm, ViewMoods } from './components/Mood'
-import { JournalInput, ViewJournals } from './components/Journal'
-import SignUpForm from './components/Signup'
-import LoginForm from './components/Login'
-import {ReflectionInput, ViewReflections} from './components/Reflection'
-import {ViewPet, ViewPetSimple} from './components/Pet'
 import background from './assets/StartingBackground.png';
-import Home from './components/Home'
 import LoginHome from './components/LoginHome'
 import { BrowserRouter } from 'react-router-dom';
-const url = "http://localhost:5000/api/"
+const url = process.env.REACT_APP_API_URL || "http://localhost:5000/api/"
 const style = {  
   backgroundImage: "url(" + background + ")",
   backgroundPosition: 'center',

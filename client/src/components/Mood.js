@@ -6,6 +6,7 @@ import {
     patch, 
     getObject
 } from '../fetch/generalFetch';
+import history from './history'
 
 const moodStyle = {
     alignContent: 'center',
@@ -64,6 +65,7 @@ const MoodForm = React.memo(({moodUrl}) => {
               const newID = await submitMood(moodUrl, id, scale, com)
               setID(newID)
               console.log("newID", newID)
+              history.push('/home/moods')
           }}
         > 
           Save 
@@ -72,6 +74,7 @@ const MoodForm = React.memo(({moodUrl}) => {
             title = "Back"
             onClick={async (e) => {
                 e.preventDefault()
+                history.push('/home/moods')
             }}
           > 
             Back 
