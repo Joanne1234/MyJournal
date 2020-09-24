@@ -8,7 +8,7 @@ Frontend: [React JS](https://reactjs.org)
 Backend: [Node JS](https://nodejs.org/en/), [Mongodb Atlas](https://www.mongodb.com/cloud/atlas)
 
 ### Documentation
-API documentation for the backend can be found [here](https://app.swaggerhub.com/apis-docs/MySecretGarden/MySecretGarden/1.0.0).
+API documentation for the backend can be found [here](https://app.swaggerhub.com/apis-docs/Joanne1/MySecretGarden/1.0.0).
 
 ## Installing and running locally
 ### Prerequisites
