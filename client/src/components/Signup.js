@@ -5,8 +5,12 @@ import {
 } from '../fetch/generalFetch';
 import ErrorMessage from './Error'
 import {
-  Link
+  BrowserRouter as Router,
+  Link,
+  Route,
+  Switch,
 } from 'react-router-dom';
+import Home from './Home'
 import history from './history'
 
 const signUpStyle = {
@@ -33,7 +37,7 @@ async function submitSignUp(postUrl, name, email, password) {
     return (signUp)
 }
 
-const SignUpForm= React.memo(({url, setLoggedIn}) => {
+const SignUpForm= React.memo(({url}) => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -72,7 +76,8 @@ const SignUpForm= React.memo(({url, setLoggedIn}) => {
             msg={error}
           />
           <div>
-              <Link to={{pathname: '/home/pet'}}>
+            <Switch>
+              <Link to={{pathname: '/home'}}>
                 <button 
                   onClick={async (e) => {
                     e.preventDefault()
@@ -84,16 +89,17 @@ const SignUpForm= React.memo(({url, setLoggedIn}) => {
                       setError(user.msg)
                       return
                     }
-                    setLoggedIn(true)
                     setDisplayError("none")
                     sessionStorage.setItem('authToken', user["authToken"])
                     sessionStorage.setItem('refreshToken', user["refreshToken"])
-                    history.push('/home/pet')
+                    history.push('/home')
                   }}
                 > 
                   Sign Up
                 </button>
                 </Link>
+                <Route path="/home" component={() => <Home baseUrl={url}/>}/>
+              </Switch>
             </div>
         </form>
       </div>

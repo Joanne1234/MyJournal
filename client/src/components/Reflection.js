@@ -7,8 +7,6 @@ import {
 } from '../fetch/generalFetch';
 import { MoodInput } from './Mood';
 import ErrorMessage from './Error'
-import history from './history'
-import {Link, Route, useLocation, useParams} from 'react-router-dom'
 
 const reflectionStyle = {
     alignContent: 'center',
@@ -30,6 +28,10 @@ async function submitReflection(postUrl, id,
     comB, comD, comA, 
     eva, ana, act, con) {
     
+    console.log("patchjournal...", id, event, des, learnt, 
+    scaleB, scaleD, scaleA, 
+    comB, comD, comA, 
+    eva, ana, act, con)
     var extended = false;
     if (eva !== "" || ana !== "" || act !== "" || con !== "") {
         extended = true
@@ -58,6 +60,7 @@ async function submitReflection(postUrl, id,
     } else {
         newPost = await makeNewPost(postUrl, newEntryDetails)
     }
+    console.log(newPost)
     // error
     if (newPost && newPost.msg) {
         return newPost
@@ -67,20 +70,19 @@ async function submitReflection(postUrl, id,
     return id
 }
 async function deleteReflection(url, id, setChange) {
+    console.log("deletereflection...", url, id)
     if (id != null) {
         url+= "/" + id
         const result = await deleteObject(url)
         if (Array.isArray(result)) {
-            if (setChange) {  
-                setChange(id)
-            }
+            setChange(id)
             return result
         }
     } 
     return []
 }
 
-const ReflectionInput = React.memo(({reflectionUrl, reflection, setUserChange}) => {
+const ReflectionInput = React.memo(({reflectionUrl, reflection}) => {
     // set variables (reflection input)
     const [event, setEvent] = useState("")
     const [des, setDes] = useState("")
@@ -99,55 +101,20 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection, setUserChange}) 
     // set variables for error msgs
     const [displayError, setDisplayError] = useState("none")
     const [error, setError] = useState("")
-
-    const params = useParams()
-    const reflectionId = params.reflectionId
     if (reflection) {
         setEvent(reflection.event)
         setDes(reflection.description)
         setLearnt(reflection.learnt)
-        setMoodB(reflection.feelings.moodBefore.scale)
-        setMoodD(reflection.feelings.moodDuring.scale)
-        setMoodA(reflection.feelings.moodAfter.scale)
-        setComB(reflection.feelings.moodBefore.comments)
-        setComD(reflection.feelings.moodDuring.comments)
-        setComA(reflection.feelings.moodAfter.comments)
+        setMoodB(reflection.moodBefore.scale)
+        setMoodD(reflection.moodDuring.scale)
+        setMoodA(reflection.moodAfter.scale)
+        setComB(reflection.moodBefore.comments)
+        setComD(reflection.moodDuring.comments)
+        setComA(reflection.moodAfter.comments)
         setEva(reflection.evaluation)
         setCon(reflection.conclusion)
         setAna(reflection.analysis)
         setAct(reflection.actionPlan)
-        setID(reflectionId)
-    }
-    try {
-      async function getReflection() {
-          if (!reflectionId) {
-              return
-          }
-          const reflection = await getObject(reflectionUrl+"/"+reflectionId)
-          if (reflection && reflection.msg) {
-              return
-          }
-          setEvent(reflection.event)
-          setDes(reflection.description)
-          setLearnt(reflection.learnt)
-          setMoodB(reflection.feelings.moodBefore.scale)
-          setMoodD(reflection.feelings.moodDuring.scale)
-          setMoodA(reflection.feelings.moodAfter.scale)
-          setComB(reflection.feelings.moodBefore.comments)
-          setComD(reflection.feelings.moodDuring.comments)
-          setComA(reflection.feelings.moodAfter.comments)
-          setEva(reflection.evaluation)
-          setCon(reflection.conclusion)
-          setAna(reflection.analysis)
-          setAct(reflection.actionPlan)
-          setID(reflectionId)
-      }
-        useEffect(()=> {
-          getReflection()
-      }, [])
-    } catch (err) {
-        console.log(err)
-        return null
     }
     return (
       <div style={reflectionStyle}>
@@ -264,9 +231,7 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection, setUserChange}) 
                 setDisplayError("none")
                 setError("")
                 setID(newID)
-                const random = Math.random().toString(36).substring(2, 15)
-                setUserChange(random)
-                history.push('/home/reflections')
+                console.log("newID", newID)
             }}
           > 
             Save 
@@ -275,7 +240,6 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection, setUserChange}) 
             title = "Back"
             onClick={async (e) => {
                 e.preventDefault()
-                history.goBack()
             }}
           > 
             Back 
@@ -285,76 +249,25 @@ const ReflectionInput = React.memo(({reflectionUrl, reflection, setUserChange}) 
     );
 })
 
-const ViewReflection = ({reflectionUrl, reflection, setChange, setUserChange}) => {
-    const path = useLocation().pathname
-    const pathname = path.replace(/\/$/, '')
-    const [event, setEvent] = useState("")
-    const [des, setDes] = useState("")
-    const [learnt, setLearnt] = useState("")
-    const [moodB, setMoodB] = useState(0)
-    const [moodD, setMoodD] = useState(0)
-    const [moodA, setMoodA] = useState(0)
-    const [comB, setComB] = useState("")
-    const [comD, setComD] = useState("")
-    const [comA, setComA] = useState("")
-    const [ana, setAna] = useState("")
-    const [con, setCon] = useState("")
-    const [eva, setEva] = useState("")
-    const [act, setAct] = useState("")
-    const [id, setID] = useState(null)
-    const [date, setDate] = useState(Date.now())
-    const params = useParams()
-    const reflectionId = params.reflectionId
-    if (reflection) {
-        setEvent(reflection.event)
-        setDes(reflection.description)
-        setLearnt(reflection.learnt)
-        setMoodB(reflection.feelings.moodBefore.scale)
-        setMoodD(reflection.feelings.moodDuring.scale)
-        setMoodA(reflection.feelings.moodAfter.scale)
-        setComB(reflection.feelings.moodBefore.comments)
-        setComD(reflection.feelings.moodDuring.comments)
-        setComA(reflection.feelings.moodAfter.comments)
-        setEva(reflection.evaluation)
-        setCon(reflection.conclusion)
-        setAna(reflection.analysis)
-        setAct(reflection.actionPlan)
-        setID(reflectionId)
-        setDate(reflection.dateCreated)
+const ViewReflection = ({reflectionUrl, reflection, setChange}) => {
+    if (!reflection) {
+        return
     }
-    try {
-        async function getReflection() {
-          if (!reflectionId) {
-              return
-          }
-          const reflection = await getObject(reflectionUrl+"/"+reflectionId)
-          if (reflection && reflection.msg) {
-              return
-          }
-          console.log(reflection)
-          setEvent(reflection.event)
-          setDes(reflection.description)
-          setLearnt(reflection.learnt)
-          setMoodB(reflection.feelings.moodBefore.scale)
-          setMoodD(reflection.feelings.moodDuring.scale)
-          setMoodA(reflection.feelings.moodAfter.scale)
-          setComB(reflection.feelings.moodBefore.comments)
-          setComD(reflection.feelings.moodDuring.comments)
-          setComA(reflection.feelings.moodAfter.comments)
-          setEva(reflection.evaluation)
-          setCon(reflection.conclusion)
-          setAna(reflection.analysis)
-          setAct(reflection.actionPlan)
-          setDate(reflection.dateCreated)
-          setID(reflectionId)
-        }
-        useEffect(()=> {
-            getReflection()
-        }, [])
-    } catch (err) {
-        console.log(err)
-        return null
-    }
+    const date = reflection.dateCreated
+    const event = reflection.event
+    const des = reflection.des
+    const learnt = reflection.learnt
+    const moodB = reflection.feelings.moodBefore.scale
+    const moodD = reflection.feelings.moodDuring.scale
+    const moodA = reflection.feelings.moodAfter.scale
+    const comB = reflection.feelings.moodBefore.comments
+    const comD = reflection.feelings.moodDuring.comments
+    const comA = reflection.feelings.moodAfter.comments
+    const ana = reflection.analysis
+    const eva = reflection.evaluation
+    const con = reflection.conclusion
+    const act = reflection.actionPlan
+    const id = reflection._id
     return (
       <div style={reflectionStyle}>
           <p>{date.toString()}</p>
@@ -371,57 +284,14 @@ const ViewReflection = ({reflectionUrl, reflection, setChange, setUserChange}) =
           <p>Evaluation: {eva}</p>
           <p>Action Plan for next time: {act}</p>
           <p>Conclusion: {con}</p>
-          <Link to={{pathname: pathname+'/edit'}}>
-            <button 
-              title = "Edit"
-            > 
-              Edit 
-            </button>
-          </Link>{' '}
           <button 
-            title = "Delete"
+            title = "Edit"
             onClick={async (e) => {
                 e.preventDefault()
-                deleteReflection(reflectionUrl, id, setUserChange)
-                history.push('/home/reflections')
             }}
           > 
-            Delete 
+            Edit 
           </button>
-          <Route path={pathname+"/edit"} component={() => <ReflectionInput reflectionUrl={reflectionUrl} reflection={reflection} setChange={setChange} setUserChange={setUserChange}/>}/>
-      </div>)
-}
-
-const ViewReflectionSimple = ({reflectionUrl, reflection, setChange, setUserChange}) => {
-    const path = useLocation().pathname
-    const pathname = path.replace(/\/$/, '')
-    const date = reflection.dateCreated
-    const event = reflection.event
-    const id = reflection._id
-    if (!reflection) {
-      history.push('/home')
-      return null
-    }
-    return (
-      <div 
-        style={reflectionStyle}
-      >
-          <p>{date.toString()}</p>
-          <p>{event}</p>
-          <Link to={{pathname: pathname+'/'+id}}>
-            <button 
-              title = "View"
-            > 
-              View
-            </button>
-          </Link>{' '}
-          <Link to={{pathname: pathname+'/'+id+'/edit'}}>
-            <button 
-              title = "Edit"
-            > 
-              Edit 
-            </button>
-          </Link>{' '}
           <button 
             title = "Delete"
             onClick={async (e) => {
@@ -431,12 +301,51 @@ const ViewReflectionSimple = ({reflectionUrl, reflection, setChange, setUserChan
           > 
             Delete 
           </button>
-          <Route exact path={pathname+"/:reflectionId"} component={() => <ViewReflection reflectionUrl={reflectionUrl} reflection={reflection} setChange={setChange} setUserChange={setUserChange}/>}/>
-          <Route path={pathname+"/:reflectionId/edit"} component={() => <ReflectionInput reflectionUrl={reflectionUrl} reflection={reflection} setChange={setChange} setUserChange={setUserChange}/>}/>
       </div>)
 }
 
-const ViewReflections = ({reflectionUrl, setUserChange}) => {
+const ViewReflectionSimple = ({reflectionUrl, reflection, setChange}) => {
+    if (!reflection) {
+        return
+    }
+    const date = reflection.dateCreated
+    const event = reflection.event
+    const id = reflection._id
+    return (
+      <div 
+        style={reflectionStyle}
+      >
+          <p>{date.toString()}</p>
+          <p>{event}</p>
+          <button 
+            title = "View"
+            onClick={async (e) => {
+                e.preventDefault()
+            }}
+          > 
+            View Reflection
+          </button>
+          <button 
+            title = "Edit"
+            onClick={async (e) => {
+                e.preventDefault()
+            }}
+          > 
+            Edit 
+          </button>
+          <button 
+            title = "Delete"
+            onClick={async (e) => {
+                e.preventDefault()
+                deleteReflection(reflectionUrl, id, setChange)
+            }}
+          > 
+            Delete 
+          </button>
+      </div>)
+}
+
+const ViewReflections = ({reflectionUrl}) => {
     const [reflections, setReflections] = useState([])
     const [reqData, setReqData] = useState("")
     try {
@@ -447,8 +356,10 @@ const ViewReflections = ({reflectionUrl, setUserChange}) => {
             setReflections(reflections)
         }
         useEffect(() => {
+            console.log("get Reflections...")
             setReflections([])
             getReflections(reflectionUrl);
+            console.log("new refs", reflections)
         }, [reqData])
     } catch (error) {
         console.log(error)
@@ -462,7 +373,6 @@ const ViewReflections = ({reflectionUrl, setUserChange}) => {
             setReflections={setReflections}
             setChange={setReqData}
             key={reflection._id}
-            setUserChange={setUserChange}
           />))}
     </div>)
 }

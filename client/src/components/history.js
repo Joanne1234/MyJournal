@@ -1,3 +1,3 @@
-import {createHashHistory} from 'history'
-const history = createHashHistory({forceRefresh:true})
+import {createBrowserHistory} from 'history'
+const history = createBrowserHistory({forceRefresh:true})
 export default history
