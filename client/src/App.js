@@ -1,12 +1,16 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import background from './assets/StartingBackground.png';
 import LoginHome from './components/LoginHome'
 import { HashRouter, Switch, Route } from 'react-router-dom';
 import SignUpForm from './components/Signup'
 import LoginForm from './components/Login'
+import { ViewMoods, MoodForm } from './components/Mood';
+import { ViewPet, ViewPetSimple } from './components/Pet';
+import {ViewReflections, ReflectionInput } from './components/Reflection';
+import {ViewJournals,JournalInput} from './components/Journal'
 import NavBar from './components/NavBar'
-var path = require('path');
-const url = path//"http://localhost:5000/api/"
+const url = "http://localhost:5000/api/"
+
 const style = {  
   backgroundImage: "url(" + background + ")",
   backgroundPosition: 'center',
@@ -56,7 +60,6 @@ const authorisedStyle = (loggedIn) => {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false)
-  console.log(path)
   const pathname='/home'
   //          <Route exact path={pathname} component={() => <NavBar url={url} pathname="/home" setLoggedIn={setLoggedIn}/>}/>
   return (
