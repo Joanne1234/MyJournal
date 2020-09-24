@@ -60,7 +60,11 @@ const authorisedStyle = (loggedIn) => {
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false)
+  const [change, setUserChange] = useState(false)
   const pathname='/home'
+  useEffect(() => {
+    console.log("changed", change)
+  }, [change])
   //          <Route exact path={pathname} component={() => <NavBar url={url} pathname="/home" setLoggedIn={setLoggedIn}/>}/>
   return (
     <div style={style}>

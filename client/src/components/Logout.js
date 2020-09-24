@@ -23,6 +23,7 @@ const Logout = ({url, setLoggedIn}) => {
             onClick={async (e) => {
                 e.preventDefault()
                 const loggedout = await logout(url)
+                console.log(loggedout)
                 // clear tokens
                 sessionStorage.removeItem('authToken')
                 sessionStorage.removeItem('refreshToken')

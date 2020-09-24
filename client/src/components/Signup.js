@@ -23,6 +23,7 @@ const reqStyle = {
 }
 
 async function submitSignUp(postUrl, name, email, password) {
+    console.log("patchjournal...", name, email,password)
     const signUpDetails = {
         name: name,
         email: email,
@@ -76,6 +77,7 @@ const SignUpForm= React.memo(({url, setLoggedIn}) => {
                   onClick={async (e) => {
                     e.preventDefault()
                     const user = await submitSignUp(url,name,email,password)
+                    console.log("user", user)
                     // invalid login details
                     if (user.msg) {
                       setDisplayError("block")
