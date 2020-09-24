@@ -9,7 +9,6 @@ import {
 async function makeNewPost(url, post) {
     // get list of items
     let res = null;
-    console.log(url)
     try {
         res = await fetch(url, getPOSTParams(post))
         res = await res.json()
