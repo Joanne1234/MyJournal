@@ -3,10 +3,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 var cors = require('cors')
 var path = require('path');
+var helmet = require('helmet');
 // Functions
 const app = express();
 app.use(cors())
 app.use(express.static(path.join(__dirname, 'build')));
+app.use(helmet())
 const port = process.env.PORT || 5000
 const CONNECTION_URI = process.env.DB_CONNECTION
 
@@ -34,6 +36,10 @@ app.use("/api/reflection", reflectionRoute);
 app.use("/api/moods", moodRoute);
 app.use("/api/pet", petRoute);
 app.use("/api/misc", miscRoute);
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
 
 // Listen to incoming connections
 app.listen(port, (err) => {
