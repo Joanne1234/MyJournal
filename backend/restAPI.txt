@@ -5,13 +5,10 @@ info:
   version: 1.0.0
   title: My Secret Garden
   termsOfService: http://swagger.io/terms/
-  contact:
-    email: apiteam@swagger.io
+  contact: {}
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-# host: petstore.swagger.io
-# basePath: /v2
 tags:
 - name: Pet
   description: Everything about your pet
@@ -56,9 +53,7 @@ paths:
         403:
           description: Invalid Token
       security:
-      - msg_auth:
-        - write:pets
-        - read:pets
+      - auth: []
     get:
       tags:
       - Journal
@@ -84,9 +79,7 @@ paths:
         403:
           description: Invalid Token
       security:
-      - msg_auth:
-        - write:pets
-        - read:pets
+      - auth: []
   /journal/{journalID}:
     get:
       tags:
@@ -114,9 +107,7 @@ paths:
         403:
           description: Invalid Token
       security:
-      - msg_auth:
-        - write:pets
-        - read:pets
+      - auth: []
     delete:
       tags:
       - Journal
@@ -145,9 +136,7 @@ paths:
         403:
           description: Invalid Token
       security:
-      - msg_auth:
-        - write:pets
-        - read:pets
+      - auth: []
     patch:
       tags:
       - Journal
@@ -174,9 +163,7 @@ paths:
         403:
           description: Invalid Token
       security:
-      - msg_auth:
-        - write:pets
-        - read:pets
+      - auth: []
   /reflection:
     post:
       tags:
@@ -207,9 +194,7 @@ paths:
         403:
           description: Invalid Token
       security:
-      - msg_auth:
-        - write:pets
-        - read:pets
+      - auth: []
     get:
       tags:
       - Reflection
@@ -235,9 +220,7 @@ paths:
         403:
           description: Invalid Token
       security:
-      - msg_auth:
-        - write:pets
-        - read:pets
+      - auth: []
   /reflection/{reflectionID}:
     get:
       tags:
@@ -265,9 +248,7 @@ paths:
         403:
           description: Invalid Token
       security:
-      - msg_auth:
-        - write:pets
-        - read:pets
+      - auth: []
     delete:
       tags:
       - Reflection
@@ -296,9 +277,7 @@ paths:
         403:
           description: Invalid Token
       security:
-      - msg_auth:
-        - write:pets
-        - read:pets
+      - auth: []
     patch:
       tags:
       - Reflection
@@ -325,9 +304,7 @@ paths:
         403:
           description: Invalid Token
       security:
-      - msg_auth:
-        - write:pets
-        - read:pets
+      - auth: []
   /user:
     get:
       tags:
@@ -350,6 +327,8 @@ paths:
             $ref: '#/definitions/UserInfo'
         403:
           description: Invalid Token
+      security:
+        - auth: []
   /user/register:
     post:
       tags:
@@ -423,6 +402,8 @@ paths:
           description: successful operation
         403:
           description: Invalid Token
+      security:
+      - auth: []
   /user/token:
     get:
       tags:
@@ -442,6 +423,8 @@ paths:
           description: Success. New auth-token provided
         403:
           description: Invalid token
+      security:
+      - auth: []
   /user/details:
     patch:
       tags:
@@ -474,6 +457,8 @@ paths:
           description: Invalid Token
         404:
           description: User not found
+      security:
+      - auth: []
   /pet:
     get:
       tags:
@@ -496,6 +481,8 @@ paths:
             $ref: '#/definitions/Pet'
         403:
           description: Invalid Token
+      security:
+      - auth: []
     post:
       tags:
       - Pet
@@ -523,6 +510,8 @@ paths:
             $ref: '#/definitions/Pet'
         403:
           description: Invalid Token
+      security:
+      - auth: []
   /pet/revive:
     post:
       tags:
@@ -551,6 +540,8 @@ paths:
             $ref: '#/definitions/Pet'
         403:
           description: Invalid Token
+      security:
+      - auth: []
   /mood:
     get:
       tags:
@@ -575,6 +566,8 @@ paths:
               $ref: '#/definitions/Mood'
         403:
           description: Invalid Token
+      security:
+      - auth: []
     post:
       tags:
       - Mood
@@ -602,6 +595,8 @@ paths:
             $ref: '#/definitions/Mood'
         403:
           description: Invalid Token
+      security:
+      - auth: []
   /mood/{moodID}:
     get:
       tags:
@@ -631,6 +626,8 @@ paths:
               $ref: '#/definitions/Mood'
         403:
           description: Invalid Token
+      security:
+      - auth: []
     patch:
       tags:
       - Mood
@@ -654,7 +651,6 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/MoodEntry'
-      
       produces:
       - application/json
       responses:
@@ -664,14 +660,13 @@ paths:
             $ref: '#/definitions/Mood'
         403:
           description: Invalid Token
+      security:
+      - auth: []
 securityDefinitions:
-  msg_auth:
-    type: oauth2
-    authorizationUrl: http://petstore.swagger.io/oauth/auth
-    flow: implicit
-    scopes:
-      write:pets: modify pets in your account
-      read:pets: read your pets
+  auth:
+    type: apiKey
+    name: auth-token
+    in: header
 definitions:
   Mood:
     type: object
@@ -847,7 +842,7 @@ definitions:
         type: integer
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
-basePath: /MySecretGarden/MySecretGarden/1.0.0
+basePath: /Joanne1/MySecretGarden/1.0.0
 schemes:
  - https
  - http

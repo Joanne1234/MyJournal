@@ -62,7 +62,6 @@ async function submitReflection(postUrl, id,
     if (newPost && newPost.msg) {
         return newPost
     }
-    console.log(newPost)
     id = newPost._id
     return id
 }
@@ -331,7 +330,6 @@ const ViewReflection = ({reflectionUrl, reflection, setChange, setUserChange}) =
           if (reflection && reflection.msg) {
               return
           }
-          console.log(reflection)
           setEvent(reflection.event)
           setDes(reflection.description)
           setLearnt(reflection.learnt)
