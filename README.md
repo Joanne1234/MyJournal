@@ -1,6 +1,10 @@
 # MySecretGarden
 
-A web app that gamifies the process of writing journals, reflections as well as mood tracking. Collect points by writing journals, reflections and mood! Feed your pet to level it up! Grow with your pet!!!
+My Secret Garden is a web app that gamifies the process of writing journals, reflections as well as mood tracking to create a fun, motivating and meaningful experience that you always want to come back to. 
+
+Collect points by writing a journal to document your experiences and actions throughout your day, rating your mood and write a reflection to analyse your experience...the process of finding out who you really are and understanding yourself better! Why did you do what you did and what has impacted your perspective and actions?
+
+Use the points to level up your pet and most importantly, GROW with your pet!
 
 ## System Architecture
 Frontend: [React JS](https://reactjs.org)
