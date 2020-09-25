@@ -69,7 +69,7 @@ router.post("/login", async (req, res) => {
     const { error } = myValidSchemas.LogInValidation.validate(req.body.post);
     console.log(error)
     if (error) return res.status(400).send({msg: error.details[0].message});
-
+    console.log(req.body)
     const user = await User.findOne({ email: req.body.post.email });
 
     // check user email exists
