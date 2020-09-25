@@ -22,7 +22,6 @@ const moodSlider = {
 }
 
 async function submitMood(postUrl, id, scale, comments) {
-    console.log("patchmood...", scale, comments, id)
     const newMood = {
         mood: scale,
         comments: comments
@@ -32,11 +31,9 @@ async function submitMood(postUrl, id, scale, comments) {
         postUrl+= "/" + id
         newPost = await patch(postUrl, newMood)
     } else {
-      console.log("new post...", postUrl, newMood)  
       newPost = await makeNewPost(postUrl, newMood)
     }
     if (newPost) {
-        console.log(newPost)
         id = newPost._id
         return id
     }
@@ -66,7 +63,6 @@ const MoodForm = React.memo(({moodUrl, setUserChange}) => {
               setID(newID)
               const random = Math.random().toString(36).substring(2, 15)
               setUserChange(random)
-              console.log("newID", newID)
               history.push('/home/moods')
           }}
         > 
