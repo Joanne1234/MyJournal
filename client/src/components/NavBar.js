@@ -96,7 +96,6 @@ const NavBar = ({url, setLoggedIn, pathname, loggedIn}) => {
         try {
             async function getUserDetails() {
                 const user = await getObject(url+"user") 
-                console.log(user) 
                 if (user && user.name != null && user.remainingPoints != null) {
                     setName(user.name)
                     setPoints(user.remainingPoints)

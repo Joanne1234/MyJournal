@@ -23,13 +23,11 @@ const loginStyle = {
 }
 
 async function submitLogin(postUrl, email, password) {
-    console.log("patchjournal...",email, password)
     const loginDetails = {
         email: email,
         password: password
     }
     const login = await makeNewPost(postUrl, loginDetails)
-    console.log(login)
     return login
 }
 
@@ -40,11 +38,8 @@ const LoginForm = React.memo(({baseUrl, url, setLoggedIn}) => {
     const [error, setError] = useState("")
     async function login() {
       const user = await submitLogin(url, email, password)
-        console.log("user:")
-        console.log(user)
         // invalid login details
         if (user && user.msg) {
-            console.log("login failed")
             setDisplayError("block")
             setError(user.msg)
             return false
@@ -86,18 +81,13 @@ const LoginForm = React.memo(({baseUrl, url, setLoggedIn}) => {
             <Link to={{pathname: '/home'}}>
             <button 
               onClick={async (e) => {
-                console.log("button clicked")
                 e.preventDefault()
                 const loggedIn = await login()
-                console.log("loggin:", loggedIn)
                 if (!loggedIn) {
-                    console.log("not loggedin...", loggedIn)
                     return
                 }
-                console.log("going home")
                 setLoggedIn(true)
                 history.push('/home')
-                console.log("loggedin". loggedIn)
             }}
             > 
               Login
