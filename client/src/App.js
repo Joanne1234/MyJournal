@@ -6,7 +6,7 @@ import SignUpForm from './components/Signup'
 import LoginForm from './components/Login'
 import NavBar from './components/NavBar'
 
-const url = process.env.REACT_APP_API_URL_ || "http://localhost:5000/api/"
+const url = process.env.REACT_APP_API_URL || "http://localhost:5000/api/"
 
 const style = {  
   backgroundImage: "url(" + background + ")",
