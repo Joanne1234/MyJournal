@@ -66,12 +66,13 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+    console.log("trying to log in")
     const { error } = myValidSchemas.LogInValidation.validate(req.body.post);
     console.log(error)
     if (error) return res.status(400).send({msg: error.details[0].message});
     console.log(req.body)
     const user = await User.findOne({ email: req.body.post.email });
-
+    console.log("user",user)
     // check user email exists
     if (!user) {
         return res.status(400).send({msg: "Email does not exist"});
@@ -80,7 +81,7 @@ router.post("/login", async (req, res) => {
     // check password is correct
     const validPass = await bcrypt.compare(req.body.post.password, user.password);
     if (!validPass) return res.status(500).send({msg: "Invalid Password"});
-
+    console.log("user found")
     // create and assign token
     try {
         const authToken = jwt.sign({ _id: user._id }, 
