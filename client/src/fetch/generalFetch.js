@@ -10,7 +10,6 @@ async function makeNewPost(url, post) {
     // get list of items
     let res = null;
     try {
-        console.log(url, post)
         res = await fetch(url, getPOSTParams(post))
         res = await res.json()
         return res
@@ -24,7 +23,6 @@ async function getObject(url) {
     // get items
     let res = null;
     try {
-        console.log("getting object", url)
         res = await fetch(url, getGETParams())
         res = await res.json()
         return res
