@@ -43,7 +43,7 @@ async function submitMood(postUrl, id, scale, comments) {
 }
 
 // wrapper around mood input section
-const MoodForm = React.memo(({moodUrl}) => {
+const MoodForm = React.memo(({moodUrl, setUserChange}) => {
   const [scale, setScale] = useState(0)
   const [com, setCom] = useState("")
   const [id, setID] = useState(null)
@@ -59,11 +59,13 @@ const MoodForm = React.memo(({moodUrl}) => {
         />
         <p/>
         <button 
-          title = "Done"
+          title = "Save"
           onClick={async (e) => {
               e.preventDefault()
               const newID = await submitMood(moodUrl, id, scale, com)
               setID(newID)
+              const random = Math.random().toString(36).substring(2, 15)
+              setUserChange(random)
               console.log("newID", newID)
               history.push('/home/moods')
           }}

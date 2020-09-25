@@ -5,12 +5,11 @@ import {
 } from '../fetch/generalFetch';
 import ErrorMessage from './Error'
 import {
-  BrowserRouter as Router,
   Link,
   Route,
   Switch,
 } from 'react-router-dom';
-import Home from './Home'
+import NavBar from './NavBar'
 import history from './history'
 
 const signUpStyle = {
@@ -37,7 +36,7 @@ async function submitSignUp(postUrl, name, email, password) {
     return (signUp)
 }
 
-const SignUpForm= React.memo(({url}) => {
+const SignUpForm= React.memo(({url, setLoggedIn}) => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -92,13 +91,14 @@ const SignUpForm= React.memo(({url}) => {
                     setDisplayError("none")
                     sessionStorage.setItem('authToken', user["authToken"])
                     sessionStorage.setItem('refreshToken', user["refreshToken"])
+                    setLoggedIn(true)
                     history.push('/home')
                   }}
                 > 
                   Sign Up
                 </button>
                 </Link>
-                <Route path="/home" component={() => <Home baseUrl={url}/>}/>
+                <Route path="/home" component={() => <NavBar baseUrl={url}/>}/>
               </Switch>
             </div>
         </form>

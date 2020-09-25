@@ -4,7 +4,7 @@ import { Router, Switch, Route } from "react-router-dom";
 
 import LoginForm from "./Login";
 import SignUpForm from "./Signup";
-import Home from "./Home";
+import NavBar from "./NavBar";
 import { ViewMoods, MoodForm } from './Mood';
 import { ViewPet, ViewPetSimple } from './Pet';
 import {ViewReflections, ReflectionInput } from './Reflection';
@@ -16,7 +16,7 @@ export default class Routes extends Component {
         return (
             <Router history={history}>
                 <Switch>
-                    <Route path="/home" component={() => <Home baseUrl={baseUrl}/>}/>
+                    <Route path="/home" component={() => <NavBar baseUrl={baseUrl}/>}/>
                     <Route path="/pet"component={ViewPet}/>
                     <Route path="/journals" component={ViewJournals}/>
                     <Route path="/newjournal"component={JournalInput}/>

@@ -9,7 +9,7 @@ import {
     makeNewPost
 } from '../fetch/generalFetch';
 import ErrorMessage from './Error'
-import Home from './Home'
+import NavBar from './NavBar'
 import history from './history'
 
 const loginStyle = {
@@ -29,10 +29,11 @@ async function submitLogin(postUrl, email, password) {
         password: password
     }
     const login = await makeNewPost(postUrl, loginDetails)
-    return (login)
+    console.log(login)
+    return login
 }
 
-const LoginForm= React.memo(({baseUrl, url, setLoggedIn}) => {
+const LoginForm = React.memo(({baseUrl, url, setLoggedIn}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [displayError, setDisplayError] = useState("none")
@@ -94,6 +95,7 @@ const LoginForm= React.memo(({baseUrl, url, setLoggedIn}) => {
                     return
                 }
                 console.log("going home")
+                setLoggedIn(true)
                 history.push('/home')
                 console.log("loggedin". loggedIn)
             }}
@@ -101,7 +103,7 @@ const LoginForm= React.memo(({baseUrl, url, setLoggedIn}) => {
               Login
             </button>
             </Link>{' '}
-              <Route exact path="/home" component={() => <Home url={baseUrl}/>}/>
+              <Route exact path="/home" component={() => <NavBar url={baseUrl}/>}/>
           </Switch>
           </div>
         </form>
