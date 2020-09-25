@@ -2,7 +2,6 @@ import React from 'react'
 import {makeNewPost} from '../fetch/generalFetch'
 import url from './url'
 import {
-  BrowserRouter as Router,
   Link,
   Route,
   Switch,
@@ -15,27 +14,27 @@ async function logout() {
     return loggedout
 }
 
-const Logout = ({url}) => {
+const Logout = ({url, setLoggedIn}) => {
     return (
       <div>
+        <Link to={{pathname: '/login'}}>
+          <button 
+            title = "Logout"
+            onClick={async (e) => {
+                e.preventDefault()
+                const loggedout = await logout(url)
+                // clear tokens
+                sessionStorage.removeItem('authToken')
+                sessionStorage.removeItem('refreshToken')
+                // return to login/signup page
+                history.push('/login')
+                setLoggedIn(false)
+            }}
+          > 
+            Log out
+          </button>
+        </Link>{' '}
         <Switch>
-          <Link to={{pathname: '/logout'}}>
-            <button 
-              title = "Logout"
-              onClick={async (e) => {
-                  e.preventDefault()
-                  const loggedout = await logout(url)
-                  console.log(loggedout)
-                  // clear tokens
-                  sessionStorage.removeItem('authToken')
-                  sessionStorage.removeItem('refreshToken')
-                  // return to login/signup page
-                  history.push('/login')
-              }}
-            > 
-              Log out
-            </button>
-          </Link>{' '}
           <Route path="/login"component={() => <LoginHome url={url}/>}/>
         </Switch>
       </div>
